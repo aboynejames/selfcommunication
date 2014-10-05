@@ -10,35 +10,32 @@ $(document).ready(function(){
 	/*
 	* TEST click and making visable and hiding
 	*
-	*/
+
 	$("#pleaseclick").click(function(e) {
 
 		//$("#pleaseclick").hide();
 		startobject.viewstatus();
 			
 	});
-					
+	*/				
 
 	$("#setsettings").hide();
 	$("#canvasDiv").hide();
 	
-
 	// create pouchdb object
 	livepouch = new pouchdbSettings();
-	
 	//delete local pouchdb database		
 	//livepouch.deletePouch();
 	livellHTML = new llHTML();
 	liveLogic = new llLogic();
-	
-	
-	
+	//fire up the classes
+	starttiming = new SwimtimeController();
 	liveMake = new makeProgramme();
 	liveServerclock = new serverClock();
 	liveRecord = new recordQS();
 	liveHTML = new ttHTML();
+	llliveListen = new llListener(starttiming);
 	
-
 	$("#pleaseclicktwo").click(function(e) {
 		e.preventDefault(e);
 		//$("#displayhistory").hide();
@@ -46,25 +43,19 @@ $(document).ready(function(){
 			
 	});
 	
-	
 	elementliverecid = 0;
 	uniqueelementids = [];
 	currentliveelementid = [];
-	//fire up the classes
-	starttiming = new SwimtimeController();
+
 	var today = new Date();
 	var month = today.getUTCMonth() + 1;
 	var day = today.getUTCDate();
 	var year = today.getUTCFullYear();
 	
 	// connect to socket.io
-	var socketpi = io.connect('http://192.168.1.44:8881');
 	cloudurl = 'http://localhost:8881';
-	homeurl = 'http://localhost/ll/opensportproject/swimtraintimer/communication/src/index.html';
+	homeurl = 'http://localhost/ll/selfcommunication/src/index.html';
 	// make socket available to timing classes
-	starttiming.setsocket(socketpi);	
-	
-	socketpi.emit('swimmerclient', { swimmerdevice: 'localhitchup' });
 	
 	var qs = $.param.querystring();
 	var qsobject = $.deparam(qs, true);
@@ -166,23 +157,23 @@ stopwatch jquery code from stopwatch3.js
 	$("#welcomesummary").show();		
 
 	// welcome summary  call pouch get no. active swimmers
-					function welcomeDatacall(callback) {  
-						livepouch.mapQueryswimmers(callback);
-					}  
-      
-						welcomeDatacall(function(wmap) { 
-								if(wmap.rows.length > 0)
-								{
-									welcomedata = wmap.rows.length + " active swimmers";
-									$("#welcomesummary").html(welcomedata);
-								}
-								else
-								{
-									welcomedata = 'No swimmmers present.<br /><br />Please press <b>Swimmers</b> button';
-									$("#welcomesummary").html(welcomedata);
-									
-								}
-					});
+	function welcomeDatacall(callback) {  
+		livepouch.mapQueryswimmers(callback);
+	}  
+
+	welcomeDatacall(function(wmap) { 
+		if(wmap.rows.length > 0)
+		{
+			welcomedata = wmap.rows.length + " active swimmers";
+			$("#welcomesummary").html(welcomedata);
+		}
+		else
+		{
+			welcomedata = 'No swimmmers present.<br /><br />Please press <b>Swimmers</b> button';
+			$("#welcomesummary").html(welcomedata);
+			
+		}
+	});
 
 	$("#siginformarea").hide();
 		
@@ -293,7 +284,7 @@ success: function( resultback ){
 
 	});
 	
-		/*
+	/*
 	* Clear pouchDB
 	*
 	*/
@@ -771,159 +762,7 @@ $("select#thelaneoptions").change(function () {
 		}
 	});
 	
-	
-	/*
-	*  Listens for live bluetooth tags and display on start or refresh button on UI
-	*/
-	socketpi.on('startSwimmers', function (startSwimmerID) {
-		// produce starting swimmers
-		var startswimmers = '';
-		startSwimmerID.forEach(function(idswimmer){
-			
-			if(idswimmer != '9059af0b879c' &&  idswimmer != '9059af0b86e2' &&  idswimmer != '9059af0b8744' &&  idswimmer != '9059af0b869c' )
-			{
-			//pass the lane data to get html ready
-				startswimmers += liveHTML.fromswimmers(idswimmer, idswimmer);
-				liveLogic.setNameID(idswimmer, idswimmer);
-			}
-		});
-		
-		$("#sortable1").html(startswimmers);
-		$(".social").hide();
-		$("#socialcontext").css('background', 'white');		
-		$("#socialcontext").data("socialstatus", "on");		
-				
-		$(".peredit").hide();
-		$(".peranalysis").hide();
-		$(".historicalplace").hide();
-		$(".historicalchart").hide();
-		$(".historicalsummary").hide();
-		$(".historicalbio").hide();						
-		$("#analysistype").hide();
-		$("#viewdata").attr("title", "on");
-			
-	});	
-		
-	/*
-	*  Event based stopwatch times coming from the SERVER
-	*/
-	socketpi.on('startEventout', function (tEventin) {
-
-		liveServerclock.IDtimeController(tEventin);		
-	
-	});
-	
-	
-	/*
-	* Touchpad listening socket
-	*/
-	 // when you get a serialdata event, do this:
-	socketpi.on('stopwatchEvent', function (data) {
-	
-		serialin = JSON.parse(data.value);
-		inser = Object.keys(serialin);
-		inser.forEach(function(thein) {
-		textaction = thein;
-		timein = serialin[thein];
-
-	});
-
-	// whatever the 'value' property of the received data is:
-		if(data.value == 1)
-		{
-			// call the split function
-			starttiming.activetimeclock.splitswimmerid(starttiming.activetimeclock.startclock.totalsplitarray[starttiming.activetimeclock.startclock.itp]);
-			starttiming.activetimeclock.split(starttiming.activetimeclock.startclock.totalsplitarray[starttiming.activetimeclock.startclock.itp]);
-			starttiming.activetimeclock.startclock.itp++;
-
-		}
-		else if(textaction == 'lap')
-		{
-			starttiming.activetimeclock.splitswimmerid(starttiming.activetimeclock.startclock.totalsplitarray[starttiming.activetimeclock.startclock.itp]);
-			starttiming.activetimeclock.split(starttiming.activetimeclock.startclock.totalsplitarray[starttiming.activetimeclock.startclock.itp]);
-			starttiming.activetimeclock.startclock.itp++;
-		}
-
-		else if(textaction == "Start")
-		{
-			starttiming.activetimeclock.startclock.startStop();
-
-		}
-		else if (textaction == 'Reset')
-		{
-			starttiming.activetimeclock.startclock.reset();
-		}
-
-	});
-
-
-// listen to server for DUP call over local network data.
-socketpi.on('DUPinfo', function (dataDUP) {
-// whatever the 'value' property of the received data is:
-	if(dataDUP == 'stop')
-	{		
-
-		// call the split function
-		starttiming.activetimeclock.splitswimmerid(starttiming.activetimeclock.startclock.totalsplitarray[starttiming.activetimeclock.startclock.itp]);
-		starttiming.activetimeclock.split(starttiming.activetimeclock.startclock.totalsplitarray[starttiming.activetimeclock.startclock.itp]);
-		starttiming.activetimeclock.startclock.itp++; 
-		
-	}
-	else if(dataDUP == 'start')
-	{
-		// start button pressed
-		starttiming.activetimeclock.startclock.startStop();
-
-	}
-
-	else if(dataDUP == 'reset')
-	{
-		// reset button pressed
-		starttiming.activetimeclock.startclock.reset();
-
-	}
-	
-});	
-
-	
-	socketpi.emit('swimmerclientstart', { swimmerdevice: 'localhitchupstart' });
-
-	socketpi.on('startnews', function (startnews) {
-	// whatis status of local connection
-		if( startnews == 'localpi')
-		{		
-
-			$("#localpi").text('CONNECTED');
-			//setInterval(function() {socketpi.emit('swimmerclient', { swimmerdevice: 'localhitchup' })}, 100000);
-		}
-		else
-		{
-		// off local pi network
-		$("#localpi").text('DIS--CONNECTED');
-			
-		}
-	
-	});
-
-
-	socketpi.on('repeatnews', function (startnews) {
-	// whatis status of local connection
-		if( startnews == 'localpilive')
-		{		
-		
-		}
-		else
-		{
-		// off local pi network
-		
-		}
-		
-	});	
-
-
 currentsetset = 'int-' + $("#swiminterval").val() + 'sec ' + $("#swimstyle").val() + ' ' + $("#swimstroke").val() + ' ' + $("#swimtechnique").val() + ' ' + $("#swimdistance").val() + ' ' + $("#swimsplit").val();
 $("#liveswimset").text('live: ' + currentsetset);			
 		
-
-
 });
