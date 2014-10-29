@@ -32,4 +32,15 @@ var spec = describe("Top level application logic class", function () {
 		buster.assert.isFunction(this.testlogic.setToken);
 	}); 	
 	
+	it("check call starting training data function", function () {
+	   
+		buster.assert.isFunction(this.testlogic.settrainingData);
+	}); 	
+	
+	it("check call starting welcome message function", function () {
+	   
+		buster.assert.isFunction(this.testlogic.setwelcomeMessage);
+	});	
+	
+	
 });

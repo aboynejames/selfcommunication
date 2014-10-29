@@ -27,4 +27,9 @@ var spec = describe("Master timing stopwatch class", function () {
 		buster.assert.isFunction(this.testperid.split);
 	}); 
 
+	it("check perpares data for html presentation", function () {
+	   
+		buster.assert.isFunction(this.testperid.dataRTsplitsprepare);
+	}); 	
+	
 });

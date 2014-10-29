@@ -9,11 +9,16 @@
 * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 * @version    $Id$
 */
-var llLogic = function() {
+var llLogic = function(localDB, localHTML) {
 	this.status = 'default';
+	this.livepouch = localDB;
+	this.liveHTML = localHTML;
 	this.nameholder = {};
 	this.idname = '';
 	this.tokenid = '';
+	
+	this.settrainingData();
+	this.setwelcomeMessage();	
 
 };
 
@@ -190,5 +195,56 @@ llLogic.prototype.setToken = function(setIDname, settokenin) {
 	this.idname = setIDname;
 	this.tokenid = settokenin;
 	
+	
+};
+
+/**
+* Sets existing training data
+* @method settrainingData		
+*
+*/	
+llLogic.prototype.settrainingData = function() {
+// check and see if there is any existing communication dates
+	function localCommcall(commdate, callback) { 
+		
+		this.livepouch.mapQueryCommdate(commdate, callback);
+	}  
+      
+
+	localCommcall('133', function(rtmap) {  
+
+		var livecommcode = this.liveHTML.livecommunicationset(rtmap.rows);
+			
+		$(".pastfuturecomm").html(livecommcode);	
+			
+	});	
+	
+};
+
+/**
+* Sets existing training data
+* @method setwelcomeMessage		
+*
+*/	
+llLogic.prototype.setwelcomeMessage= function() {
+
+	// welcome summary  call pouch get no. active swimmers
+	function welcomeDatacall(callback) {  
+		livepouch.mapQueryswimmers(callback);
+	}  
+
+	welcomeDatacall(function(wmap) { 
+		if(wmap.rows.length > 0)
+		{
+			welcomedata = wmap.rows.length + " active swimmers";
+			$("#welcomesummary").html(welcomedata);
+		}
+		else
+		{
+			welcomedata = 'No swimmmers present.<br /><br />Please press <b>Swimmers</b> button';
+			$("#welcomesummary").html(welcomedata);
+			
+		}
+	});
 	
 };

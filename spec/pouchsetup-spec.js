@@ -19,7 +19,6 @@ var spec = describe("Setup and operation of pouchdb local database store", funct
 	     
 	it("check create pouch function ", function () {
 
-			   
 		buster.assert.isFunction(this.testpouch.createPouchdb);
 		//buster.assert.isArray();
 		//buster.assert.equals(, '1000.00');
@@ -32,7 +31,6 @@ var spec = describe("Setup and operation of pouchdb local database store", funct
 	
 	it("check singlesave pouch function ", function () {
 
-			   
 		buster.assert.isFunction(this.testpouch.singleSave);
 		//buster.assert.isArray();
 		//buster.assert.equals(, '1000.00');

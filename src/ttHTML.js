@@ -115,60 +115,23 @@ ttHTML.prototype.viewdataHeader = function(swimmerlist) {
 * @method realtimesplitsdiff
 *
 */	
-ttHTML.prototype.realtimesplitsdiff = function(thisin, spidint) {
-	
+ttHTML.prototype.realtimesplitsdiff = function(displayIN, spidint) {
+console.log(displayIN);
 	$splive = '#splits'+spidint;
 	$analysislive = '#analysis'+spidint;
 
-	// what order did this swimmer go off?  nb  n added for jquery compatiblity
-	var naddedspid = 'n' + spidint
-	swimpos = thisin.startclock.activeswimmers.indexOf(naddedspid);
-
-	// order position times interval time period
-	splitlag = swimpos * (thisin.startclock.swiminterval * 1000);
-	splittimelive = thisin.t[3] + thisin.t[1] - thisin.t[0] - splitlag;
-	thisin.spid[thisin.splitidlive][1] = splittimelive;
-	lastsplitpers = thisin.sparray[thisin.splitidlive].slice(-1)[0];
-	
-	if(lastsplitpers === undefined)
-	{
-		lastsplitpers = splittimelive;
-	}
-	
-	thisin.sparray[thisin.splitidlive].push(thisin.spid[thisin.splitidlive][1]);
-	// display splits
-	var shortsplitreal = thisin.startclock.format(splittimelive).slice(3,11);
 	$($splive).show();
-	$('<li><span>' + thisin.startclock.zero(thisin.spid[spidint][2]) + '</span> ' + shortsplitreal + '</li>').appendTo($($splive)).slideDown('fast');
+	$('<li><span>' + displayIN.splitID + '</span> ' + displayIN.splittime+ '</li>').appendTo($($splive)).slideDown('fast');
 	$($splive).find('li').removeClass('first last');
 	$($splive).find('li:first').addClass('first').end().find('li:last').addClass('last');
+	
 	// perform analysis & display
-
-	lastsplitper = thisin.sparray[thisin.splitidlive].slice(-1)[0];
-
-	lastdifftocompare = thisin.spdiffarray[thisin.splitidlive].slice(-1)[0];				
-	if(lastdifftocompare === undefined)
-	{
-
-		lastsplitpers = 0;
-	}
-
-	thedifflive = splittimelive - lastsplitpers;
-
-	thisin.spdiffarray[thisin.splitidlive].push(thedifflive);
-	if(thedifflive > lastdifftocompare ) {
-			thecolourdiff = 'red'; }
-	else {
-			thecolourdiff = 'green'; }
-			
-		shortsplitreal = thisin.startclock.format(thedifflive).slice(3,11);
-		$($analysislive).show();
-		$('<li><span>' + thisin.startclock.zero(thisin.spid[spidint][2]) + '</span> ' + shortsplitreal + '</li>').appendTo($($analysislive)).css("color", thecolourdiff).slideDown('fast');
-		$($analysislive).find('li').removeClass('first last');
-		$($analysislive).find('li:first').addClass('first').end().find('li:last').addClass('last');
-		//.css("color", thecolourdiff)
+	$($analysislive).show();
+	$('<li><span>' + displayIN.splitID+ '</span> ' + displayIN.splitdiff + '</li>').appendTo($($analysislive)).css("color", displayIN.color).slideDown('fast');
+	$($analysislive).find('li').removeClass('first last');
+	$($analysislive).find('li:first').addClass('first').end().find('li:last').addClass('last');
+	//.css("color", thecolourdiff)
 						
-
 };
 
 /**
@@ -221,71 +184,70 @@ ttHTML.prototype.clearIDdisplay = function(spidint) {
 */	
 ttHTML.prototype.realtimestop = function(thisin, stoploc) {
 		
-			$splitslive = '#splits'+stoploc;
-			$stoplive = '#stop'+stoploc;
-			$analysislive = '#analysis'+stoploc;
+	$splitslive = '#splits'+stoploc;
+	$stoplive = '#stop'+stoploc;
+	$analysislive = '#analysis'+stoploc;
+
+	// make the total time elasped in ms local to this swimerid
+	// what order did this swimmer go off?
+	swimpos = thisin.startclock.activeswimmers.indexOf(stoploc);
+
+	lastsplitpers = '';
+	lastsplitpers = thisin.sparray[stoploc].slice(-1)[0];
+	// order position times interval time period
+	stoplag = swimpos * (thisin.startclock.swiminterval * 1000);
+
+	stoptimelive = thisin.t[1] - thisin.t[0] - stoplag;
 		
-		// make the total time elasped in ms local to this swimerid
-				// what order did this swimmer go off?
-				swimpos = thisin.startclock.activeswimmers.indexOf(stoploc);
-	
-				lastsplitpers = '';
-				lastsplitpers = thisin.sparray[stoploc].slice(-1)[0];
-				// order position times interval time period
-				stoplag = swimpos * (thisin.startclock.swiminterval * 1000);
-		
-				stoptimelive = thisin.t[1] - thisin.t[0] - stoplag;
-					
-				thisin.spid[stoploc][1] = stoptimelive;
-				thisin.sparray[stoploc].push(thisin.spid[stoploc][1]);	
-							
-				(thisin.startclock.$start).text(thisin.startclock.startText);
+	thisin.spid[stoploc][1] = stoptimelive;
+	thisin.sparray[stoploc].push(thisin.spid[stoploc][1]);	
 				
+	(thisin.startclock.$start).text(thisin.startclock.startText);
+		
 	// make this stop/split id local to this swimmer				
-				thisin.spid[thisin.splitidlive][2]++;
-		
-		// for splits
+	thisin.spid[thisin.splitidlive][2]++;
 
-				if(lastsplitpers === undefined)
-				{		
-					lastsplitpers = stoptimelive;
-				}
-				
-				var shortsplitreal = thisin.startclock.format(thisin.spid[stoploc][1]).slice(3,11);
-				$($splitslive).show();
-				$('<li><span>' + thisin.startclock.zero(thisin.spid[stoploc][2]) + '</span> ' + shortsplitreal + '</li>').appendTo($($splitslive)).slideDown('fast');
-				$($splitslive).find('li').removeClass('first last');
-				$($splitslive).find('li:first').addClass('first').end().find('li:last').addClass('last');
-				
-				thisin.t[1] = 0;
-				thisin.stoppedlist.push(stoploc);
-				thisin.startclock.display();
-				
-				lastsplitper = thisin.sparray[stoploc].slice(-1)[0];
-				lastdifftocompare = thisin.spdiffarray[stoploc].slice(-1)[0];
-				
-				if(lastdifftocompare === undefined)
-				{
-					lastdifftocompare = stoptimelive;
-				}
+	// for splits
+	if(lastsplitpers === undefined)
+	{		
+		lastsplitpers = stoptimelive;
+	}
+	
+	var shortsplitreal = thisin.startclock.format(thisin.spid[stoploc][1]).slice(3,11);
+	$($splitslive).show();
+	$('<li><span>' + thisin.startclock.zero(thisin.spid[stoploc][2]) + '</span> ' + shortsplitreal + '</li>').appendTo($($splitslive)).slideDown('fast');
+	$($splitslive).find('li').removeClass('first last');
+	$($splitslive).find('li:first').addClass('first').end().find('li:last').addClass('last');
+	
+	thisin.t[1] = 0;
+	thisin.stoppedlist.push(stoploc);
+	thisin.startclock.display();
+	
+	lastsplitper = thisin.sparray[stoploc].slice(-1)[0];
+	lastdifftocompare = thisin.spdiffarray[stoploc].slice(-1)[0];
+	
+	if(lastdifftocompare === undefined)
+	{
+		lastdifftocompare = stoptimelive;
+	}
 
-				thedifflive = stoptimelive - lastsplitpers;
-		
-				thisin.spdiffarray[stoploc].push(thedifflive);
-				if(thedifflive > lastdifftocompare ) {
-						thecolourdiff = 'red'; }
-				else {
-						thecolourdiff = 'green'; }
-					if(thisin.spid[stoploc][2] == 1 )
-					{
-						thedifflive = stoptimelive;
-					}
-					shortsplitreal = thisin.startclock.format(thedifflive).slice(3,11);
-					$($analysislive).show();
-					$('<li><span>' + thisin.startclock.zero(thisin.spid[stoploc][2]) + '</span> ' + shortsplitreal + '</li>').appendTo($($analysislive)).css("color", thecolourdiff).slideDown('fast');
-					$($analysislive).find('li').removeClass('first last');
-					$($analysislive).find('li:first').addClass('first').end().find('li:last').addClass('last');
-		
+	thedifflive = stoptimelive - lastsplitpers;
+
+	thisin.spdiffarray[stoploc].push(thedifflive);
+	if(thedifflive > lastdifftocompare ) {
+			thecolourdiff = 'red'; }
+	else {
+			thecolourdiff = 'green'; }
+		if(thisin.spid[stoploc][2] == 1 )
+		{
+			thedifflive = stoptimelive;
+		}
+		shortsplitreal = thisin.startclock.format(thedifflive).slice(3,11);
+		$($analysislive).show();
+		$('<li><span>' + thisin.startclock.zero(thisin.spid[stoploc][2]) + '</span> ' + shortsplitreal + '</li>').appendTo($($analysislive)).css("color", thecolourdiff).slideDown('fast');
+		$($analysislive).find('li').removeClass('first last');
+		$($analysislive).find('li:first').addClass('first').end().find('li:last').addClass('last');
+	
 };
 	
 	

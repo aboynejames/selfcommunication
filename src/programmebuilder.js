@@ -27,7 +27,7 @@ $(document).ready(function(){
 	//delete local pouchdb database		
 	//livepouch.deletePouch();
 	livellHTML = new llHTML();
-	liveLogic = new llLogic();
+	liveLogic = new llLogic(livepouch, livellHTML);
 	//fire up the classes
 	starttiming = new SwimtimeController();
 	liveMake = new makeProgramme();
@@ -103,44 +103,30 @@ $(document).ready(function(){
 			liveRecord.recordLogic(idclick, $sotgt);			
 	});			
 
-// check and see if there is any existing communication dates
-	function localCommcall(commdate, callback) { 
-		
-		livepouch.mapQueryCommdate(commdate, callback);
-	}  
-      
 
-	localCommcall('133', function(rtmap) {  
-
-		var livecommcode = liveHTML.livecommunicationset(rtmap.rows);
-			
-		$(".pastfuturecomm").html(livecommcode);	
-			
-	});
-
-/**
-stopwatch jquery code from stopwatch3.js
-*
-*
-*/
+	/**
+	stopwatch jquery code from stopwatch3.js
+	*
+	*
+	*/
 	$(window).unload( function () { 
-	
-			passwordin = '';
-			$("#loadlaneselect").hide();
-			$("#loadswimmers").hide();
-			$("#addnewswimmer").hide();
-			$("#syncdata").hide();
-			$("#clearpouchdb").hide();
-			$("#sortable1").empty();
-			$("#signinopener").show();
-	
-				// need to tell the server of the log out too
-			$.get("/signout/" + $.cookie("traintimer"), function(resultout){
-						});
-			$.cookie("traintimer", null);
-      //alert("You haved signed out of TrainTimer");
 
-		});
+		passwordin = '';
+		$("#loadlaneselect").hide();
+		$("#loadswimmers").hide();
+		$("#addnewswimmer").hide();
+		$("#syncdata").hide();
+		$("#clearpouchdb").hide();
+		$("#sortable1").empty();
+		$("#signinopener").show();
+
+			// need to tell the server of the log out too
+		$.get("/signout/" + $.cookie("traintimer"), function(resultout){
+					});
+		$.cookie("traintimer", null);
+		//alert("You haved signed out of TrainTimer");
+
+	});
 	
 	/*
 	*  Hide in place html
@@ -155,26 +141,6 @@ stopwatch jquery code from stopwatch3.js
 	$(".historicalplace").hide();
 	$("#signupspace").hide();		
 	$("#welcomesummary").show();		
-
-	// welcome summary  call pouch get no. active swimmers
-	function welcomeDatacall(callback) {  
-		livepouch.mapQueryswimmers(callback);
-	}  
-
-	welcomeDatacall(function(wmap) { 
-		if(wmap.rows.length > 0)
-		{
-			welcomedata = wmap.rows.length + " active swimmers";
-			$("#welcomesummary").html(welcomedata);
-		}
-		else
-		{
-			welcomedata = 'No swimmmers present.<br /><br />Please press <b>Swimmers</b> button';
-			$("#welcomesummary").html(welcomedata);
-			
-		}
-	});
-
 	$("#siginformarea").hide();
 		
     $("#signinopener").click(function(e) {
@@ -300,8 +266,6 @@ success: function( resultback ){
 	*/
 	$("#syncdata").click(function(e) {
 	
-		// ToDO need to query pouch to see if design docs have been set
-				
 		function checkdesigndocStatus(callback) {  
 			livepouch.getDoc(callback, "_design/swimmers");
 		}  
@@ -327,8 +291,6 @@ success: function( resultback ){
 
 			}	
 				
-			
-		
 		});
 		
 
@@ -381,7 +343,7 @@ success: function( resultback ){
 			
 
 		});
-});
+	});
 
 	$("#ifsignedin").click(function(e) {
 			e.preventDefault(e);
@@ -407,9 +369,9 @@ success: function( resultback ){
 					
 	});
 		
-/*
-* add swimmer form produced after default layout therefore need to delegate to existing DOM element	
-*/	
+	/*
+	* add swimmer form produced after default layout therefore need to delegate to existing DOM element	
+	*/	
 	$("#newmaster").click(function (e) {
 				
 					e.preventDefault(e);
@@ -419,7 +381,7 @@ success: function( resultback ){
 				
 				var $tgt = $(e.target);
 	
-        if ($tgt.is("#newmasteradd")) {
+		if ($tgt.is("#newmasteradd")) {
 					
 					// need to be both a name and a lane number validation
 					newmastnameis = $("#newmasteradd input#newmastid ").val();
@@ -503,11 +465,11 @@ success: function( resultback ){
 			
 	});
 		
-/*
-*  load swimmer by lane number
-*/
-$("select#thelaneoptions").change(function () {
-	//livepouch.deletePouch();
+	/*
+	*  load swimmer by lane number
+	*/
+	$("select#thelaneoptions").change(function () {
+		//livepouch.deletePouch();
 				$("#viewdatalive").empty();
 				$("#visualisedata").empty();
 				$("#splittimeshistorical").empty();
@@ -565,9 +527,9 @@ $("select#thelaneoptions").change(function () {
 			})
 			.change();	
 
-/*
-* first time start
-*/
+	/*
+	* first time start
+	*/
 	$("#welcomesummary").on("click", function (e) {
 		e.preventDefault(e);
 		var $swtgt = $(e.target);
@@ -580,10 +542,10 @@ $("select#thelaneoptions").change(function () {
 	});
 
 			
-/*
-*
-* List swimmer alphabetically
-*/
+	/*
+	*
+	* List swimmer alphabetically
+	*/
 	$("#theswimmeroptions").change(function () {
 
 				$("#viewdatalive").empty();
@@ -630,7 +592,7 @@ $("select#thelaneoptions").change(function () {
 				$("#addnewswimmer").hide();
 				$("#loadlane").attr('class', 'control-text');
 
-			}).change();	
+	}).change();	
 
 	/*
 	*  Take name clicke form a to z listing and display them in live area
@@ -677,9 +639,9 @@ $("select#thelaneoptions").change(function () {
 		
 	});
 
-/*
-* Close alphalist
-*/
+	/*
+	* Close alphalist
+	*/
 	$("#addalphatwo").click(function (e) {
 		e.preventDefault(e);
 		$("#addalpha").hide();
@@ -687,9 +649,9 @@ $("select#thelaneoptions").change(function () {
 		
 	});
 
-/*
-* Clear all swimmer from sort div
-*/
+	/*
+	* Clear all swimmer from sort div
+	*/
 	$("#clearallswimmers").click(function (e) {
 		e.preventDefault(e);		
 
@@ -706,9 +668,9 @@ $("select#thelaneoptions").change(function () {
 
 	});	
 	
-/*
-* delgation of add alpha swimmer
-*/
+	/*
+	* delgation of add alpha swimmer
+	*/
 	$("#aselectswimmer").click(function (e) {
 		e.preventDefault(e);
 			var $tgt = $(e.target);
@@ -719,7 +681,7 @@ $("select#thelaneoptions").change(function () {
 				}
 	});					
 
-// drag and drop
+	// drag and drop
 		$("ul.droptrue").sortable({
 			connectWith: 'ul',
 			opacity: 0.6,
@@ -757,12 +719,12 @@ $("select#thelaneoptions").change(function () {
 		if ($swtgt.is("a")) {
 			idclick = $swtgt.attr("id");
 			idname =$swtgt.attr("title");	
-// pass on the id of the swimmer  2 pass on the type of click,  start, reset, split, stop	
+			// pass on the id of the swimmer  2 pass on the type of click,  start, reset, split, stop	
 			starttiming.identifyswimmer(idname, idclick);
 		}
 	});
 	
-currentsetset = 'int-' + $("#swiminterval").val() + 'sec ' + $("#swimstyle").val() + ' ' + $("#swimstroke").val() + ' ' + $("#swimtechnique").val() + ' ' + $("#swimdistance").val() + ' ' + $("#swimsplit").val();
+	currentsetset = 'int-' + $("#swiminterval").val() + 'sec ' + $("#swimstyle").val() + ' ' + $("#swimstroke").val() + ' ' + $("#swimtechnique").val() + ' ' + $("#swimdistance").val() + ' ' + $("#swimsplit").val();
 $("#liveswimset").text('live: ' + currentsetset);			
 		
 });

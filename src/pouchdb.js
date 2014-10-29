@@ -15,7 +15,7 @@
 * @class pouchdbSettings
 */
 var pouchdbSettings = function() {
-  this.account = {};
+	this.account = {};
 	this.account.pouchdbname = 'traintimer';
 	this.livepouch = this.createPouchdb();
 

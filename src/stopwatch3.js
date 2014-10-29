@@ -1,7 +1,7 @@
 /**
 * Train TImer
 *
-* Start node.js  Train Timer
+* control over stopwatch
 *
 *
 * @package    Train Timer part of open sport project
@@ -10,7 +10,6 @@
 * @version    0.1.0
 */
 
-
 /**
 * Record swimmer controller class
 * @class SwimtimeController
@@ -18,7 +17,6 @@
  function SwimtimeController () {
 
 	this.activetimeclock = new PerSwimmer();
-
 	this.setsocket = function(socketlive) {
 		
 		this.classSocket = socketlive;
@@ -32,7 +30,7 @@
 *
 */		 
 SwimtimeController.prototype.identifyswimmer = function(swimtitle, clickid) {
-	
+
 		this.identifer = swimtitle;
 		this.clicktype = clickid;
 console.log('clickid= ' + this.clicktype);
@@ -561,7 +559,234 @@ $("#liveswimset").text('live: ' + currentsetset);
 			} // closes switch		
 			
  }; // closes id function
+
+
+/**
+*  Per swimmer timer class 
+*  sets up holding data objects per swimmer  and button interaction personalization
+* @class PerSwimmer
+*/
+var PerSwimmer = function() {
+
+	this.startclock = new MasterWatch();
+	this.stoppedlist = [];
+//	this.swimmer = swimid;	
+}; // closes Per Swimmer
+
+/*
+* need to identify swimmer split or stop that has been clicked on the UI
+*/	
+PerSwimmer.prototype.splitswimmerid = function(splitid) {	
+		
+	this.splitidlive = splitid;			
+// keep track of the live split swimmers that are active
+	if(!this.activesplitter)
+	{
+		this.activesplitter = [];
+	}
+	// keep track of how many times the stop button has been click
+	if(!this.stoppedlist)
+	{
+		this.stoppedlist = [];
+	}
+		
+	if(!this.activesplitter[this.splitidlive]){
+		this.activesplitter.push(this.splitidlive);
+	}
+		
+	// need to defin array for all local split stop times array
+	if(!this.spid)
+	{
+		this.spid = {};	
+		this.sparray = {};	
+		this.spdiffarray = {};
+	}
+		
+	// if an individual swimmer id array has not been set set it
+	if(!this.spid[this.splitidlive]){					
+	this.spid[this.splitidlive] =  [1,0,0];
+	this.sparray[this.splitidlive] =  [];
+	this.spdiffarray[this.splitidlive] = [];	
+	
+	/*
+	 * setting for each swimmer  array of array [idofswimmer][splits time where:
+	 *
+	 * 0 = default swimmer time is set to 1 i.e. live
+	 * 1 = total time elapse in ms for each stop / split?  need to check for split logic
+	 * 2 = the stop/split number local to each swimmer
+	*/		
+		}	
+};	
+
+/**
+*  Splits and calculations	
+* @method split
+*/
+PerSwimmer.prototype.split = function(spidin) {
+
+	// contorl logic, has the main timer been started? If yes proceed if not do nothing.		
+	if(this.startclock.t[1] === 0) {
+		// nothing start do nothing.
+	}
+	else
+	{	
+		this.t =  this.startclock.t;	
+		// need array to hold each swimmer id along with their times/splits info.
+		this.t[2] = 1;		
+		if (this.t[2] !== 0)
+		{
+			this.spid[spidin][2]++;
+
+			// update per swimmer data models
+			readydataPresentation = {};
+			readydataPresentation = this.dataRTsplitsprepare(spidin);
+			//  pass  data to HTML class
+			liveHTML.realtimesplitsdiff(readydataPresentation, spidin);
+		}
+
+		// if the second last split then change button to say stop for the last
+		stopsplitstatuslast = '';
+		stopsplitstatuslast = (this.startclock.stopsplitstatus - this.spid[spidin][2]);
+		// if the swim distance is 50m and split is 50m  change split button to also say stop
+		if(stopsplitstatuslast == 1)
+		{
+			$(".splitbutton" + spidin).text("STOP");
+		}
+		else if(stopsplitstatuslast === 0)
+		{
+			$(".splitbutton" + spidin).text("Finished");
+			this.stoppedlist.push(spidin);		
+			// save the splits to pouchdb
+			var sptoday = new Date();
+				datesplitnumber = Date.parse(sptoday);
+// need to identify live swim element
+				var liveelementrecord = $(".recordcount").parent().attr('id');		
+				swimtype = $("#" + liveelementrecord + ".liveswimelement #swimtype").text();
+				swimstroke = $("#" + liveelementrecord + ".liveswimelement #swimstroke").text();
+				swimtechnique = $("#" + liveelementrecord + ".liveswimelement #swimtechnique").text();
+				swimdistance = $("#" + liveelementrecord + ".liveswimelement #swimdistance").text();
+				swimsplit = $("#swimsplit").val();
+				swimpool = $("#swimpoolsize").val();
 			
+				// form swim data
+				swimdatastatus = {};
+				swimdatastatus.swimdate = sptoday;
+				swimdatastatus.swimtype = swimtype;
+				swimdatastatus.Swimming_stroke = swimstroke;
+				swimdatastatus.swimtechnique = swimtechnique;
+				swimdatastatus.Distance = swimdistance;
+				swimdatastatus.swimsplit = swimsplit;
+				swimdatastatus.Swimmingpool = swimpool;	
+			// save to localpouchdb need to prepare buld array json structure 
+				newjsonswim = {};								
+				newjsonswim.swimmerid = '';
+				newjsonswim.swimmername = '';					
+				newjsonswim.session = {};
+				newjsonswim.swimmerid = spidin;
+					
+				newjsonswim.swimmername = liveLogic.nameholder[spidin];					
+				newjsonswim.session.sessionid = datesplitnumber;	
+				newjsonswim.session.swiminfo = swimdatastatus;	
+				newjsonswim.session.splittimes = this.sparray[spidin];
+
+				livepouch.singleSave(newjsonswim);
+					
+				// emitt socket back to pi server
+				starttiming.classSocket.emit('contextMixer', newjsonswim);
+				// emitt identity timing event trigger
+				starttiming.classSocket.emit('checkSplitID', newjsonswim);			
+
+
+			// need to stop the master stopwatch if all swimmers have finished			
+			if(this.stoppedlist.length == (this.startclock.activeswimmers.length)){
+				// stop the main stopwatch
+				clearInterval(this.t[4]);
+				// /reset/clear stoppedlist counter
+				this.stoppedlist = [];
+				
+				// forward on recordlive counter
+				this.startclock.recordmanagement();
+				var recordlivenumber = $(".recordcount").text();
+				// display the recorded data in real time
+				//liveHTML.reatimesplitdisplay(recordlivenumber, spidin, newjsonswim);
+				
+			}
+		}		
+		else if(stopsplitstatuslast < 0)
+		{
+				// if the finished button keeps on being press, could be a split button was press twice. TODO
+				// give ability to edit input and update pouchdb
+				$(".splitbutton" + spidin).text("Edit splits");
+				$('<a href="" id="splitedit">Split Edit</a>').appendTo($("#splits"+ spidin)).slideDown('fast');
+
+		}
+
+
+			return false;
+
+		}
+
+};
+
+/**
+*  Update data model per swimmer new time data	
+* @method dataRTsplitsprepare
+*/
+PerSwimmer.prototype.dataRTsplitsprepare = function(spidin) {
+	
+	dataforDisplay = {};
+
+	// what order did this swimmer go off?  nb  n added for jquery compatiblity
+	var naddedspid = 'n' + spidin;
+	swimpos = this.startclock.activeswimmers.indexOf(naddedspid);
+
+	// order position times interval time period
+	splitlag = swimpos * (this.startclock.swiminterval * 1000);
+	splittimelive = this.startclock.t[3] + this.startclock.t[1] - this.startclock.t[0] - splitlag;
+	
+	this.spid[this.splitidlive][1] = splittimelive;
+	lastsplitpers = this.sparray[this.splitidlive].slice(-1)[0];	
+
+	if(lastsplitpers === undefined)
+	{
+		lastsplitpers = splittimelive;
+	}
+
+
+	this.sparray[this.splitidlive].push(this.spid[this.splitidlive][1]);
+	// display splits
+	var shortsplitreal = this.startclock.format(splittimelive).slice(3,11);	
+	
+	lastsplitper = this.sparray[this.splitidlive].slice(-1)[0];
+	lastdifftocompare = this.spdiffarray[this.splitidlive].slice(-1)[0];
+	
+	if(lastdifftocompare === undefined)
+	{
+
+		lastsplitpers = 0;
+	}
+
+	thedifflive = splittimelive - lastsplitpers;
+
+	this.spdiffarray[this.splitidlive].push(thedifflive);
+	
+	if(thedifflive > lastdifftocompare ) {
+			thecolourdiff = 'red'; }
+	else {
+			thecolourdiff = 'green'; }
+			
+		shortsplitreal = this.startclock.format(thedifflive).slice(3,11);	
+	
+	dataforDisplay.splitID = this.spid[this.splitidlive][2];		
+	dataforDisplay.splittime = this.startclock.format(splittimelive);
+	dataforDisplay.splitdiff = this.startclock.format(thedifflive);
+	dataforDisplay.color = thecolourdiff;			
+			
+	return dataforDisplay;		
+			
+};
+
+ 
 /**
 * Master Stop Watch Class
 * @class MasterWatch
@@ -606,14 +831,19 @@ MasterWatch.prototype.format = function(ms) {
 		return d.substr(0, d.length - 1);
 	},
 	
-	this.zero = function(num) {
-		if (parseInt(num) < 0) var neg = true;
-		if (Math.abs(parseInt(num)) < 10) {
-			num = '0' + Math.abs(num);
-		}
-		if (neg) num = '-' + num;
+/**
+* reset the time digits to zero
+* @method zero
+*/
+MasterWatch.prototype.zero = function(num) {
+
+	if (parseInt(num) < 0) var neg = true;
+	if (Math.abs(parseInt(num)) < 10) {
+		num = '0' + Math.abs(num);
+	}
+	if (neg) num = '-' + num;
 		return num;
-	},
+};
 	
 /**
 * reset the master stopwatch to ZERO
@@ -890,164 +1120,3 @@ MasterWatch.prototype.backrecordmanagement = function() {
 		
 	};
 	
-
-/**
-*  Per swimmer timer class 
-*  acting as sub class of Master Timer
-* @class PerSwimmer
-*/
-var PerSwimmer = function() {
-
-	this.startclock = new MasterWatch();
-	this.stoppedlist = [];
-//	this.swimmer = swimid;	
-}; // closes Per Swimmer
-
-/*
-* need to identify swimmer split or stop that has been clicked on the UI
-*/	
-PerSwimmer.prototype.splitswimmerid = function(splitid) {	
-		this.splitidlive = splitid;			
-
-// keep track of the live split swimmers that are active
-		if(!this.activesplitter)
-		{
-			this.activesplitter = [];
-		}
-// keep track of how many times the stop button has been click
-		if(!this.stoppedlist)
-		{
-			this.stoppedlist = [];
-		}
-			
-		if(!this.activesplitter[this.splitidlive]){
-			this.activesplitter.push(this.splitidlive);
-		}
-			
-// need to defin array for all local split stop times array
-		if(!this.spid)
-		{
-			this.spid = {};	
-			this.sparray = {};	
-			this.spdiffarray = {};
-		}
-			
-// if an individual swimmer id array has not been set set it
-		if(!this.spid[this.splitidlive]){					
-		this.spid[this.splitidlive] =  [1,0,0];
-		this.sparray[this.splitidlive] =  [];
-		this.spdiffarray[this.splitidlive] = [];	
-		
-	/*
-	 * setting for each swimmer  array of array [idofswimmer][splits time where:
-	 *
-	 * 0 = default swimmer time is set to 1 i.e. live
-	 * 1 = total time elapse in ms for each stop / split?  need to check for split logic
-	 * 2 = the stop/split number local to each swimmer
-	*/		
-		}	
-};	
-
-/**
-*  Splits and calculations	
-* @method split
-*/
-PerSwimmer.prototype.split = function(spidin) {
-	// contorl logic, has the main timer been started? If yes proceed if not do nothing.		
-	if(this.startclock.t[1] === 0) {
-		// nothing start do nothing.
-	}
-	else
-	{	
-		this.t =  this.startclock.t;	
-		// need array to hold each swimmer id along with their times/splits info.
-		this.t[2] = 1;		
-		if (this.t[2] !== 0)
-		{
-			this.spid[spidin][2]++;
-			liveHTML.realtimesplitsdiff(this, spidin);
-		}
-
-		// if the second last split then change button to say stop for the last
-		stopsplitstatuslast = '';
-		stopsplitstatuslast = (this.startclock.stopsplitstatus - this.spid[spidin][2]);
-		// if the swim distance is 50m and split is 50m  change split button to also say stop
-		if(stopsplitstatuslast == 1)
-		{
-			$(".splitbutton" + spidin).text("STOP");
-		}
-		else if(stopsplitstatuslast === 0)
-		{
-			$(".splitbutton" + spidin).text("Finished");
-			this.stoppedlist.push(spidin);		
-			// save the splits to pouchdb
-			var sptoday = new Date();
-				datesplitnumber = Date.parse(sptoday);
-// need to identify live swim element
-				var liveelementrecord = $(".recordcount").parent().attr('id');		
-				swimtype = $("#" + liveelementrecord + ".liveswimelement #swimtype").text();
-				swimstroke = $("#" + liveelementrecord + ".liveswimelement #swimstroke").text();
-				swimtechnique = $("#" + liveelementrecord + ".liveswimelement #swimtechnique").text();
-				swimdistance = $("#" + liveelementrecord + ".liveswimelement #swimdistance").text();
-				swimsplit = $("#swimsplit").val();
-				swimpool = $("#swimpoolsize").val();
-			
-				// form swim data
-				swimdatastatus = {};
-				swimdatastatus.swimdate = sptoday;
-				swimdatastatus.swimtype = swimtype;
-				swimdatastatus.Swimming_stroke = swimstroke;
-				swimdatastatus.swimtechnique = swimtechnique;
-				swimdatastatus.Distance = swimdistance;
-				swimdatastatus.swimsplit = swimsplit;
-				swimdatastatus.Swimmingpool = swimpool;	
-			// save to localpouchdb need to prepare buld array json structure 
-				newjsonswim = {};								
-				newjsonswim.swimmerid = '';
-				newjsonswim.swimmername = '';					
-				newjsonswim.session = {};
-				newjsonswim.swimmerid = spidin;
-					
-				newjsonswim.swimmername = liveLogic.nameholder[spidin];					
-				newjsonswim.session.sessionid = datesplitnumber;	
-				newjsonswim.session.swiminfo = swimdatastatus;	
-				newjsonswim.session.splittimes = this.sparray[spidin];
-
-				livepouch.singleSave(newjsonswim);
-					
-				// emitt socket back to pi server
-				starttiming.classSocket.emit('contextMixer', newjsonswim);
-				// emitt identity timing event trigger
-				starttiming.classSocket.emit('checkSplitID', newjsonswim);			
-
-
-			// need to stop the master stopwatch if all swimmers have finished			
-			if(this.stoppedlist.length == (this.startclock.activeswimmers.length)){
-		// stop the main stopwatch
-				clearInterval(this.t[4]);
-		// /reset/clear stoppedlist counter
-				this.stoppedlist = [];
-				
-				// forward on recordlive counter
-				this.startclock.recordmanagement();
-				var recordlivenumber = $(".recordcount").text();
-				// display the recorded data in real time
-				//liveHTML.reatimesplitdisplay(recordlivenumber, spidin, newjsonswim);
-				
-			}
-		}		
-		else if(stopsplitstatuslast < 0)
-		{
-				// if the finished button keeps on being press, could be a split button was press twice. TODO
-				// give ability to edit input and update pouchdb
-				$(".splitbutton" + spidin).text("Edit splits");
-				$('<a href="" id="splitedit">Split Edit</a>').appendTo($("#splits"+ spidin)).slideDown('fast');
-
-		}
-
-
-			return false;
-
-		}
-
-};
