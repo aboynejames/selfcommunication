@@ -300,78 +300,78 @@ historicalswimdata = {};
 						livepouch.mapQuerySplits(swimidin, callback);
 
 					}  
-      
-					swimprepared = localDataSPcall(swimidin, function(spmap) {
 
-						historicalswimdata = {};	
-							
-						// the current swim settings
-							
-						var liveelementrecord = $(".recordcount").parent().attr('id');		
-						var	swimsetlive = {};
-						//swimsetlive["swimdate"] = $("#swimdate").text();
-						swimsetlive.swimstyle = $("#" + liveelementrecord + ".liveswimelement #swimstyle").text();
-						swimsetlive.swimtype =	$("#" + liveelementrecord + ".liveswimelement #swimtype").text();
-						swimsetlive.Swimming_stroke = $("#" + liveelementrecord + ".liveswimelement #swimstroke").text();
-						swimsetlive.swimtechnique =  $("#" + liveelementrecord + ".liveswimelement #swimtechnique").text();
-						swimsetlive.Distance = $("#" + liveelementrecord + ".liveswimelement #swimdistance").text();							
-					// itterate over results and pick out the one required	
-						spmap.rows.forEach(function(rowswimrs){
+	swimprepared = localDataSPcall(swimidin, function(spmap) {
 
-							if(rowswimrs.key == swimidin )
-							{
-								// need to set time interval to retrieve
-								var traintimenow = new Date();
-								startswimdate = Date.parse(traintimenow); // current time/date
-								
-								// change length goe back in time depending on chart or summary context (plus need to sync with online couchdb for all data history)
-								if(datatypein == "splitdatain")
-								{
-									endswimdateperiod = startswimdate - 86400000; // 86400000 cover from start date 24 hours 10800000;  //go back 3 hours
-								}
-								else if(datatypein == "persummaryid")
-								{
-									endswimdateperiod = startswimdate - 315360000000;  // go back 10 years from todays date
-								}	
-							
-								if( rowswimrs.value.sessionid < startswimdate && rowswimrs.value.sessionid > endswimdateperiod)
-								{							
-									// need a set of filters for time period and swim setting e.g. stroke distance etc
-									if( swimsetlive.swimstroke ==  rowswimrs.value.swiminfo.swimstroke  && swimsetlive.swimtechnique ==  rowswimrs.value.swiminfo.swimtechnique && swimsetlive.swimdistance ==  rowswimrs.value.swiminfo.swimdistance )
-									{
-									//pass the lane data to get html ready
-										historicalswimdata[rowswimrs.value.sessionid] = rowswimrs.value;
-									
-									}
-								}
-							}	
-						});
+		historicalswimdata = {};	
 			
-							// what is data for
-							if(datatypein == "splitdatain")
-							{
-							//return historicalswimdata;
-								visthedata = liveHTML.visualiseme(livepouch, swimidin, historicalswimdata);
-								swimidin = '';
-								historicalswimdata = '';
+		// the current swim settings
+			
+		var liveelementrecord = $(".recordcount").parent().attr('id');		
+		var	swimsetlive = {};
+		//swimsetlive["swimdate"] = $("#swimdate").text();
+		swimsetlive.swimstyle = $("#" + liveelementrecord + ".liveswimelement #swimstyle").text();
+		swimsetlive.swimtype =	$("#" + liveelementrecord + ".liveswimelement #swimtype").text();
+		swimsetlive.Swimming_stroke = $("#" + liveelementrecord + ".liveswimelement #swimstroke").text();
+		swimsetlive.swimtechnique =  $("#" + liveelementrecord + ".liveswimelement #swimtechnique").text();
+		swimsetlive.Distance = $("#" + liveelementrecord + ".liveswimelement #swimdistance").text();							
+	// itterate over results and pick out the one required	
+		spmap.rows.forEach(function(rowswimrs){
 
-							}
-							else if(datatypein == "persummaryid")
-							{
-							//return historicalswimdata;
-								visthedata = liveHTML.summaryme(livepouch, swimidin, historicalswimdata);
-								swimidin = '';
-								historicalswimdata = '';
+			if(rowswimrs.key == swimidin )
+			{
+				// need to set time interval to retrieve
+				var traintimenow = new Date();
+				startswimdate = Date.parse(traintimenow); // current time/date
+				
+				// change length goe back in time depending on chart or summary context (plus need to sync with online couchdb for all data history)
+				if(datatypein == "splitdatain")
+				{
+					endswimdateperiod = startswimdate - 86400000; // 86400000 cover from start date 24 hours 10800000;  //go back 3 hours
+				}
+				else if(datatypein == "persummaryid")
+				{
+					endswimdateperiod = startswimdate - 315360000000;  // go back 10 years from todays date
+				}	
+			
+				if( rowswimrs.value.sessionid < startswimdate && rowswimrs.value.sessionid > endswimdateperiod)
+				{							
+					// need a set of filters for time period and swim setting e.g. stroke distance etc
+					if( swimsetlive.swimstroke ==  rowswimrs.value.swiminfo.swimstroke  && swimsetlive.swimtechnique ==  rowswimrs.value.swiminfo.swimtechnique && swimsetlive.swimdistance ==  rowswimrs.value.swiminfo.swimdistance )
+					{
+					//pass the lane data to get html ready
+						historicalswimdata[rowswimrs.value.sessionid] = rowswimrs.value;
+					
+					}
+				}
+			}	
+		});
 
-							}
-							else
-							{
-								// chart data
-								visthedata = liveHTML.visualisechart(livepouch, swimidin, historicalswimdata);
-								swimidin = '';
-								historicalswimdata = '';
-							}
-					});
+			// what is data for
+			if(datatypein == "splitdatain")
+			{
+			//return historicalswimdata;
+				visthedata = liveHTML.visualiseme(livepouch, swimidin, historicalswimdata);
+				swimidin = '';
+				historicalswimdata = '';
+
+			}
+			else if(datatypein == "persummaryid")
+			{
+			//return historicalswimdata;
+				visthedata = liveHTML.summaryme(livepouch, swimidin, historicalswimdata);
+				swimidin = '';
+				historicalswimdata = '';
+
+			}
+			else
+			{
+				// chart data
+				visthedata = liveHTML.visualisechart(livepouch, swimidin, historicalswimdata);
+				swimidin = '';
+				historicalswimdata = '';
+			}
+	});
 };
 
 

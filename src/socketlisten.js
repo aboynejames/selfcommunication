@@ -31,6 +31,7 @@ llListener.prototype.activeListeners = function() {
 	*/
 	this.socketpi.on('startSwimmers', function (startSwimmerID) {
 		// produce starting swimmers
+console.log('blue tooth ids');		
 		var startswimmers = '';
 		startSwimmerID.forEach(function(idswimmer){
 			
@@ -42,7 +43,7 @@ llListener.prototype.activeListeners = function() {
 			}
 		});
 		
-		$("#sortable1").html(startswimmers);
+		$("#sortable1").append(startswimmers);
 		$(".social").hide();
 		$("#socialcontext").css('background', 'white');		
 		$("#socialcontext").data("socialstatus", "on");		

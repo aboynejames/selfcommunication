@@ -34,22 +34,25 @@
 <header id="framework">
 	<nav>
 			<div class="record"><a id="recordme" href="" >Record</a></div>
-			<div class="make"><a id="make" href="" >Make</a></div>
+			<div class="make"><a id="make" href="" >Make Set</a></div>
 	</nav>
 </header>
 <section id="attention">
 	<nav id="timetext">
 		<li>
-			<div class="time"> <input type="text" id="datepicker" /> <a href="" id="datecontext" data-datestatus="on" >Saved sets</a></div>
+			<div class="time"> <input type="text" id="datepicker" /> <a href="" id="datecontext" data-datestatus="on" >Sets</a></div>
 		</li>
 		<li>
-			<div class="lifestyle">Swimming</div>
+			<div class="lifestyle"></div>
 		</li>
 		<li>
 			<a href="" id="socialcontext" data-socialstatus="on" >Swimmers</a>
 		</li>
 		<li>
 			<a href="" id="toolscontext" data-toolsstatus="on" >Tools</a>
+		</li>
+		<li>
+			<a href="" id="poolcontext" data-poolstatus="on" >Pool</a>
 		</li>
 	</nav>
 
@@ -145,7 +148,7 @@
 		<div id="addalpha"></div>
 		<div id="addalphatwo"></div>
 	</div>   <!--closes control panel div-->
-			<div id="welcomesummary"></div>
+			
 	<div id="changeplace"></div>
 	
 	<br />
@@ -157,19 +160,7 @@
 		<a class="control-text" href="#"  id="startsort" title="on" >Edit order</a>
 		<a class="control-text" href="#"  id="startremove" title="on" >Remove</a>
 	</section>
-
-<section id="recordflow">
-
-	<div class="recordfeedback"></div>
-
-	<div class="liveswimset"></div>
-	
-
-	<div id="recordcommunication">
-		<div class="editcount">
-					<a href="" id="skipelement" >Skip</a> <a href="" id="backelement" >back</a>
-		</div>
-
+	<section class="pool">
 		<div id="pooltrainsettings">
 			<div class="recordswimsettingslabel">
 				<label>Split:</label>
@@ -192,15 +183,36 @@
 				</select>
 			</div>
 			<div class="recordswimsettingslabel">
-			<label>Pool:</label>
+			<label>Pool length</label>
 			<select class="poolselect" id="swimpoolsize">
 				<option value="Shortcourse">Shortcourse</option>
 				<option value="Longcourse">Longcourse</option>
 			</select>
 		</div>
 		</div>
-	</div>
+	</section>
+
+
+<section id="recordflow">
+
+	<div class="recordfeedback"></div>
+	<section class="set-list">
+
+		<div id="recordcommunication">
+			<div class="editcount">
+				<a href="" id="skipelement" >Skip</a> <a href="" id="backelement" >back</a>
+			</div>
+			<div id="live-set-holder">
+				<div class="liveswimset"></div>
+				<div id="set-display">
+					<a href="" id="show-complete-set">Show all</a>
+				</div>
+			</div>
+		</div>
+	</section>
+	
 	<div style="clear:both"></div>
+	
 	<div class="container">
 		<div id="masterclock">	
 			<div id="thecontrols">
@@ -211,14 +223,16 @@
 						<li><span id="confirmsave"></span></li>
 				</ul>
 			</div>
-		<div id="theclock">
+			<div id="theclock">
 			<h2 id="timer">00:00:00.00</h2>
 			<small id="labels">HOUR<span>MIN</span><span>SEC</span><span>1/100</span></small>
 		</div>
+		</div>
+
 	</div>
 	
 	<ul id="sortable1" class='droptrue'></ul>
-
+	<div id="welcomesummary"></div>
 </section>  <!-- closes recorflow-->                            
 
 <section id="makeflow">
@@ -355,7 +369,7 @@
 		</header>
 	</div>
 	
-	<header id="connect-header"><b>Connectivity:</b> Peer, Local PI <span id="localpi">Not Connected</span> or Public Web</header>
+	<header id="connect-header"><b>Connectivity:</b> Local PI <span id="localpi">Not Connected</span> </header>
 <header id="swimadmin">
 		<b>Sensors:</b> <a title="on" id="touchpadmode" href="" class="sensor-text">WIFI TouchPad</a><span id="wifitouchpadin">Not Connected</span> <a title="on" id="videomode" href="" class="sensor-text">Video</a><span id="localvideo">Not Connected</span>
 		<br>
@@ -364,7 +378,7 @@
 					<nav>
 						<ul>
 							<li>
-							 <a href="" id="dshare" ><img src="images/dshare-small.png" ></a> Social-share  
+							 <a href="" id="dshare" data-dshare-status="on" ><img id="image-dshare" src="images/dshare-small.png" ></a> Social-share  
 							</li>
 						</ul>
 					</nav>
@@ -376,7 +390,7 @@
 					<div class="D-apis" >MaidSafe <div id="madesafe-api-status">add</div></div>
 				</div>
 				<div id="dshare-api-add">
-					Thank you for selecting to join the Dsensor Decentralized Sensor Mapping Protocol:  Click to install.	
+					Comming soon: Dsensor Decentralized Sensor Mapping Protocol.
 				</div>
 	</section>
 	

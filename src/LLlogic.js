@@ -19,7 +19,7 @@ var llLogic = function(localDB, localHTML) {
 	this.tokenid = '';
 	
 	this.settrainingData();
-	this.setwelcomeMessage();	
+
 
 };
 
@@ -163,6 +163,23 @@ llLogic.prototype.frameworklogic = function(intentionin) {
 		}
 	break;
 		
+	case "poolcontext": 
+	// need to check for status of button
+	var poolstatus = $("#poolcontext").data("poolstatus");
+		if(poolstatus == "on")
+		{
+			$(".pool").show();
+			$("#poolcontext").css('background', 'green');		
+			$("#poolcontext").data("poolstatus", "off");
+		}
+		else
+		{
+			$(".pool").hide();
+			$("#poolcontext").css('background', 'white');		
+			$("#poolcontext").data("poolstatus", "on");
+		}
+	break;		
+		
 	case "skipelement":
 		starttiming.activetimeclock.startclock.recordmanagement();
 	break;
@@ -238,8 +255,8 @@ llLogic.prototype.settrainingData = function() {
 * @method setwelcomeMessage		
 *
 */	
-llLogic.prototype.setwelcomeMessage= function() {
-
+llLogic.prototype.setwelcomeMessage = function() {
+console.log('wekcine start message');
 	// welcome summary  call pouch get no. active swimmers
 	function welcomeDatacall(callback) {  
 		livepouch.mapQueryswimmers(callback);
@@ -248,11 +265,35 @@ llLogic.prototype.setwelcomeMessage= function() {
 	welcomeDatacall(function(wmap) { 
 		if(wmap.rows.length > 0)
 		{
+console.log('swimmers');			
 			welcomedata = wmap.rows.length + " active swimmers";
 			$("#welcomesummary").html(welcomedata);
+			$("#sortable1").show();
+			presentswimmer = '';
+
+			wmap.rows.forEach(function(rowswimrs){
+console.log('being call start swimmer list');				
+				//pass the lane data to get html ready
+				presentswimmer += liveHTML.fromswimmers(rowswimrs.value[1], rowswimrs.value[0]);
+				liveLogic.setNameID(rowswimrs.value[1], rowswimrs.value[0]);
+				liveLogic.setEmailID(rowswimrs.value[2], rowswimrs.value[0]);
+			});
+console.log(presentswimmer);			
+			$("#sortable1").html(presentswimmer);	
+			$("#sortable1").show();
+			
+		$(".peredit").hide();
+		$(".peranalysis").hide();
+		$(".historicalplace").hide();
+		$(".historicalchart").hide();
+		$(".historicalsummary").hide();
+		$(".historicalbio").hide();						
+		$("#analysistype").hide();
+		$("#viewdata").attr("title", "on");
 		}
 		else
 		{
+console.log('no swimmer at start');			
 			welcomedata = 'No swimmmers present.<br /><br />Please press <b>Swimmers</b> button';
 			$("#welcomesummary").html(welcomedata);
 			

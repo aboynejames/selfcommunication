@@ -233,7 +233,7 @@ nav {
     text-shadow:1px 1px 0px #ffffff;
 }
 
-#toolscontext {
+#toolscontext, #poolcontext {
 	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
     -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
     box-shadow:inset 0px 1px 0px 0px #ffffff;
@@ -516,28 +516,35 @@ label {
 	/*font-size:18px;*/
 	width:160px;
 	vertical-align: bottom;
-	}
+}
 
 .editcount {
 	float:left;	
 	}
 	
 #pooltrainsettings {
-	float:left;	
-	}
+	display:block;	
+	border:1px solid blue;
+}
 	
 .recordswimsettingslabel {
-	margin-left:30px;
-	
-	}
+	display:inline-block;
+	margin-top:6px;
+	border:1px solid red;	
+	width:300px;
+}
 	
 .recordswimsettingslabel label {
-	font-size:2em;
+	display:inline-block;
+	font-size:1.8em;
 	padding-top:0.4em;
-	/*font-size:18px;*/
-	width:75px;
 	vertical-align: bottom;
+	text-align:right;
 	}
+	
+#swiminterval {
+	display:inline-block;	
+}
 
 #skipelement {
 		-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
@@ -636,15 +643,18 @@ label {
 */
 
 .liveswimset {
+	float:left;
 	margin:20px;
 	border:1px solid #CCCCCC;
 	font-size:1.0em;
+	width:60%;
+	height:120px;
 	clear:both;
 }
 
 .liveswimelement {
 	margin:20px;
-	border:0px solid blue;
+	border:1px solid blue;
 	font-size:1.8em;
 	clear:both;
 }
@@ -666,6 +676,13 @@ label {
 
 .recordcount {
 	display:inline;
+	border:1px solid blue;
+	background: #F6F6F6;
+	font-size:1.8em;
+}
+
+#set-display{
+	float:left;
 	border:1px solid blue;
 	background: #F6F6F6;
 	font-size:1.8em;
@@ -707,6 +724,17 @@ label {
 	vertical-align:middle;
 	background: grey;
 }
+
+/**
+*
+* Dshare image
+*
+*/
+#image-dshare  {
+	width: 4%;
+    height: auto;
+}
+
 
 
 @media screen and (max-width: 320px) {

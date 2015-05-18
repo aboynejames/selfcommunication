@@ -7,22 +7,26 @@ $(document).ready(function(){
 
 	var startobject = new visability();
 
-	/*
-	* TEST click and making visable and hiding
-	*
-
-	$("#pleaseclick").click(function(e) {
-
-		//$("#pleaseclick").hide();
-		startobject.viewstatus();
-			
-	});
-	*/				
-
 	$("#setsettings").hide();
 	$("#canvasDiv").hide();
+	/**
+	*  Hide in place html
+	*/
+	$("#loadlaneselect").hide();
+	$("#loadswimmers").hide();
+	$("#addnewswimmer").hide();
+	$("#loadclearswimmers").hide();
+	$(".swimsettings").hide();
+	$("#analysistype").hide();
+	$(".peredit").hide();
+	$(".historicalplace").hide();
+	$("#signupspace").hide();		
+	$("#welcomesummary").show();		
+	$("#siginformarea").hide();
 	$("#dshare-api").hide();
 	$("#dshare-api-add").hide();
+	$(".pool").hide();
+		
 	
 	// create pouchdb object
 	livepouch = new pouchdbSettings();
@@ -38,13 +42,6 @@ $(document).ready(function(){
 	liveHTML = new ttHTML();
 	llliveListen = new llListener(starttiming);
 	
-	$("#pleaseclicktwo").click(function(e) {
-		e.preventDefault(e);
-		//$("#displayhistory").hide();
-		liveLogic.frameworklogic(this);
-			
-	});
-	
 	elementliverecid = 0;
 	uniqueelementids = [];
 	currentliveelementid = [];
@@ -59,6 +56,10 @@ $(document).ready(function(){
 	homeurl = 'http://localhost/ll/selfcommunication/src/index.html';
 	// make socket available to timing classes
 	
+	/*
+	*  check status of URL bar
+	*
+	*/
 	var qs = $.param.querystring();
 	var qsobject = $.deparam(qs, true);
 	
@@ -75,26 +76,56 @@ $(document).ready(function(){
 		
 	}
 	
-	// datepicker 
+	// datepicker stup
 	$( "#datepicker" ).datepicker({
 		changeMonth: true,
 		changeYear: true,
 		onSelect: 		function() {
-			liveRecord.recordLogic("pfdate", "pfdate")}
+		liveRecord.recordLogic("pfdate", "pfdate")}
 	});
 
 	$("#datepicker" ).datepicker( "setDate", today );
 	$('#ui-datepicker-div').css('display','none');
 	liveRecord.recordLogic("pfdate", "pfdate");		
 
+	
+	/**
+	* drag and drop
+	*/
+	$("ul.droptrue").sortable({
+		connectWith: 'ul',
+		opacity: 0.6,
+		update : updatePostOrder
+	});
+
+	
+//	$("#sortable1, #sortable2").disableSelection();
+	$("#sortable1, #sortable2").css('minHeight',$("#sortable1").height()+"px");
+
+		function updatePostOrder() { 
+		var arrorder = [];
+			$("#sortable1 .ui-state-default").each(function(){
+			arrorder.push($(this).attr('id'));
+			});
+			$('#postOrder').val(arrorder.join(','));
+		}
+	
+		
+	/*
+	*  master click capture logic
+	*
+	*/
 	$("a,#communication,#recordcommunication,#attention,.liveswimset").click(function(e) {
 		e.preventDefault(e);
 		var $sotgt = $(e.target);			
 		liveLogic.frameworklogic(this);	
 
-			var resultord = $('#sortable1').sortable('toArray');
-			idclick = $(this).attr("id");
-			idtitle = $(this).attr("title");	
+		var resultord = $('#sortable1').sortable('toArray');
+		idclick = $(this).attr("id");
+		idtitle = $(this).attr("title");	
+console.log(idclick);		
+		if(idclick != "dshare")
+		{
 			// pass on the id of the swimmer  2 pass on the type of click,  start, reset, split, stop	
 			starttiming.identifyswimmer(idtitle, idclick);
 			
@@ -102,158 +133,82 @@ $(document).ready(function(){
 			liveMake.makeLogic(idclick, $sotgt);
 
 			// record DS data
-			liveRecord.recordLogic(idclick, $sotgt);			
-	});			
-
-
-	/**
-	stopwatch jquery code from stopwatch3.js
-	*
-	*
-	*/
-	$(window).unload( function () { 
-
-		passwordin = '';
-		$("#loadlaneselect").hide();
-		$("#loadswimmers").hide();
-		$("#addnewswimmer").hide();
-		$("#syncdata").hide();
-		$("#clearpouchdb").hide();
-		$("#sortable1").empty();
-		$("#signinopener").show();
-
-			// need to tell the server of the log out too
-		$.get("/signout/" + $.cookie("traintimer"), function(resultout){
-					});
-		$.cookie("traintimer", null);
-		//alert("You haved signed out of TrainTimer");
-
-	});
-	
-	/*
-	*  Hide in place html
-	*/
-	$("#loadlaneselect").hide();
-	$("#loadswimmers").hide();
-	$("#addnewswimmer").hide();
-	$("#loadclearswimmers").hide();
-	$(".swimsettings").hide();
-	$("#analysistype").hide();
-	$(".peredit").hide();
-	$(".historicalplace").hide();
-	$("#signupspace").hide();		
-	$("#welcomesummary").show();		
-	$("#siginformarea").hide();
-		
-    $("#signinopener").click(function(e) {
-        usernamein = '';
-        passwordin = '';
-        cookieidhash = '';
-        passwordhash= '';
-    // sigin modal
-    loginhtml = '';
-    loginhtml += '<div>Welcome, to Train Timer </div>';
-    loginhtml += '<form method="post" action="#" id="siginform" >';
-    loginhtml += '<div><label for="name">Username</label><input id="name" class="text ui-widget-content ui-corner-all" type="text" title="name" size="16" ></div>';
-    loginhtml += '<div><label for="password">Password</label><input id="password" class="text ui-widget-content ui-corner-all" type="password" value="" name="password" size="16" ></div></form>';
-    loginhtml += '<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix"> <div class="ui-dialog-buttonset"><button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" type="button" role="button" aria-disabled="false"><span class="ui-button-text">Sign me in</span></button></div></div><div id="responsemessage"></div>';
-
-    $("#siginformarea").dialog({
-            autoOpen: false,
-            height: 340,
-            width: 260, 
-            title: 'Signin to Train Timer',
-            buttons: {
-                                        "Sign me in": function() {
-                                            // need to make couchdb call to accept user details
-                                        usernamein = $("#name").val();
-                                        passwordin = $("#password").val();                                            
-
-                                            hashCode = function(str){
-                                                var hash = 0;
-                                                if (str.length === 0) return hash;
-                                                for (i = 0; i < str.length; i++) {
-                                                        char = str.charCodeAt(i);
-                                                        hash = ((hash<<5)-hash)+char;
-                                                        hash = hash & hash; // Convert to 32bit integer
-                                                }
-                                                return hash;
-						};
-                                        passwordhash = hashCode(passwordin);
-                                        cookieidhash = hashCode((usernamein + passwordin));                                    
-                                            
-                                        this.acceptdetails = '';
-        
-                                                                                                // Wrap up the PUT request execution.
-        var makePUTRequest = function(){
-
-            // Make the PUT request.
-            $.ajax({
-                type: "GET",
-                url: "http://www.mepath.co.uk:8833/signinmepath/" + usernamein + '/' + cookieidhash + '/' + passwordin,
-                contentType: "application/json",
-                dataType: "text",
-success: function( resultback ){
-
-					this.acceptdetails = JSON.parse(resultback);
-					
-					if(this.acceptdetails.signin == 'passed') {		
-												$.cookie("traintimer", cookieidhash,  { expires: 7 });
-												$("#ifsignedin").show();	
-												$("#ifsignedin").html('<a class="control-text" text="SignOut" title="signout" href="#"  id="signincloser" >Sign-out</a> ' + usernamein );
-												$("#siginformarea").dialog( "close" );
-												$("#signinopener").hide();
-												$("#sortable1").empty();
-												$("#signupstart").hide();
-												$("#syncdata").show();
-												$("#clearpouchdb").show();
-										
-																				
-												}
-												else {
-													$("#responsemessage").html('Signin Failed, try again');
-												}
-
-				},
-				error: function( error ){
-					// Log any error.
-//console.log( "ERROR:", error );
-				},
-				complete: function(){
-
-				}
-			});
-
-		};
-
-		// Execute the PUT request.
-		makePUTRequest();
-
-										},
-										Cancel: function() {
-										$( this ).dialog( "close" );
-										}
-
-			},
-			close: function() {
-			$("#name").val( "" );
-			$("#password").val( "" );
-			cookieidhash = '';
-			passwordhash= '';
+			liveRecord.recordLogic(idclick, $sotgt);						
+			
+		}
+		else
+		{
+		/*
+		*  Dapp connectiviity control
+		*
+		*/
+			switch(idclick){
 				
+							
+				case"dshare":
+				
+					var dshareidstatus = $("#dshare").data("dshare-status");
+		
+					if(dshareidstatus == "on")
+					{
+						$("#dshare-api").show();
+						$("#dshare").data("dshare-status", "off");
+
+					}
+					else
+					{
+						$("#dshare-api").hide();
+						$("#dshare").data("dshare-status", "on");
+		
+					}	
+		
+				break;
+
+			
 			}
 
-		});
-	$("#siginformarea").show();
-	$("#siginformarea").dialog('open');
+		}
 
-		// prevent the default action, e.g., following a link
-		return false;
-
-	});
+	});		
 	
 	/*
-	* Clear pouchDB
+	*  Dapp connectiviity control
+	*
+	*/
+	$(".D-apis").click(function(e) {
+		e.preventDefault(e);
+		var $sotgt = $(e.target);			
+//console.log($sotgt);
+		idclick = $($sotgt).attr("id");
+//console.log(idclick );
+		switch(idclick){
+						
+			case"bitcoin-api-status":
+				
+			
+			break;
+			
+			case"Dsensor-api-status":
+				$("#dshare-api-add").show();
+				$("#Dsensor-api-status").text('live');
+				$("#Dsensor-api-status").css("background-color", "green");
+			
+			break;
+			
+			case"ethereum-api-status":
+				
+			break;
+			
+			case"maidsafe-api-status":
+				
+			break;
+		}
+
+	});	
+	
+	
+	/*
+	* Clear pouchDB  in signed in mode only
 	*
 	*/
 	$("#clearpouchdb").click(function(e) {
@@ -395,30 +350,6 @@ console.log(trainlog.results);
 		});
 	});
 
-	$("#ifsignedin").click(function(e) {
-			e.preventDefault(e);
-			var $sotgt = $(e.target);
-		if ($sotgt.is("#signincloser")) {
-
-			$("#ifsignedin").fadeOut("slow");
-				//$("#ifsignedin").hide();	
-			$("#loadlaneselect").hide();
-			$("#syncdata").hide();
-			$("#clearpouchdb").hide();
-			$("#sortable1").empty();
-			$("#signinopener").show();
-			$("#signupstart").show();
-
-			// need to tell the server of the log out too
-			$.get("/signout/" + $.cookie("traintimer"), function(resultout){
-				
-			});
-			$.cookie("traintimer", null);
-
-		}
-					
-	});
-		
 	/*
 	* add swimmer form produced after default layout therefore need to delegate to existing DOM element	
 	*/	
@@ -527,64 +458,64 @@ console.log(trainlog.results);
 	*  load swimmer by lane number
 	*/
 	$("select#thelaneoptions").change(function () {
-		//livepouch.deletePouch();
-				$("#viewdatalive").empty();
-				$("#visualisedata").empty();
-				$("#splittimeshistorical").empty();
-				$("#loadlane").attr("title", "on");
-				selectedlanenow = $("select#thelaneoptions").val();
-
-				//first check local
-					function localDatacall(selectedlanenow, callback) {  
-						livepouch.mapQueryname(selectedlanenow, callback);
-					}  
-      
-			localDatacall(selectedlanenow, function(rtmap) {  
-
-						presentswimmer = '';
 	
-					rtmap.rows.forEach(function(rowswimrs){
+		$("#viewdatalive").empty();
+		$("#visualisedata").empty();
+		$("#splittimeshistorical").empty();
+		$("#loadlane").attr("title", "on");
+		selectedlanenow = $("select#thelaneoptions").val();
 
-							if(rowswimrs.key == selectedlanenow )
-							{
-								//pass the lane data to get html ready
-								presentswimmer += liveHTML.fromswimmers(rowswimrs.value[1], rowswimrs.value[0]);
-								liveLogic.setNameID(rowswimrs.value[1], rowswimrs.value[0]);
-								liveLogic.setEmailID(rowswimrs.value[2], rowswimrs.value[0]);
-								}
-						});
+		//first check local
+		function localDatacall(selectedlanenow, callback) {  
+			livepouch.mapQueryname(selectedlanenow, callback);
+		}  
 
-				$("#sortable1").html(presentswimmer);	
-				$(".social").hide();
-				$("#socialcontext").css('background', 'white');		
-				$("#socialcontext").data("socialstatus", "on");		
-						
-				$(".peredit").hide();
-				$(".peranalysis").hide();
-				$(".historicalplace").hide();
-				$(".historicalchart").hide();
-				$(".historicalsummary").hide();
-				$(".historicalbio").hide();						
-				$("#analysistype").hide();
-				$("#viewdata").attr("title", "on");
-				$("#loadlane").attr('class', 'control-text');
-						
-				// test splits data recall						
-				function localDataSPcall(dataspin, callback) {  
-						livepouch.mapQuerySplits(dataspin, callback);
+		localDatacall(selectedlanenow, function(rtmap) {  
 
-					}  
-      
-					localDataSPcall('1', function(spmap) {  
-	
-					});						
-						
-			});  
-							
-				$("#controloptions").hide();
+			presentswimmer = '';
 
-			})
-			.change();	
+			rtmap.rows.forEach(function(rowswimrs){
+
+				if(rowswimrs.key == selectedlanenow )
+				{
+					//pass the lane data to get html ready
+					presentswimmer += liveHTML.fromswimmers(rowswimrs.value[1], rowswimrs.value[0]);
+					liveLogic.setNameID(rowswimrs.value[1], rowswimrs.value[0]);
+					liveLogic.setEmailID(rowswimrs.value[2], rowswimrs.value[0]);
+				}
+			});
+
+		$("#sortable1").html(presentswimmer);	
+		$(".social").hide();
+		$("#socialcontext").css('background', 'white');		
+		$("#socialcontext").data("socialstatus", "on");		
+				
+		$(".peredit").hide();
+		$(".peranalysis").hide();
+		$(".historicalplace").hide();
+		$(".historicalchart").hide();
+		$(".historicalsummary").hide();
+		$(".historicalbio").hide();						
+		$("#analysistype").hide();
+		$("#viewdata").attr("title", "on");
+		$("#loadlane").attr('class', 'control-text');
+				
+		// test splits data recall						
+		/*function localDataSPcall(dataspin, callback) {  
+			livepouch.mapQuerySplits(dataspin, callback);
+
+		}  
+
+			localDataSPcall('1', function(spmap) {  
+
+			});						
+		*/		
+	});  
+					
+		$("#controloptions").hide();
+
+	})
+	.change();	
 
 	/*
 	* first time start
@@ -654,7 +585,7 @@ console.log(trainlog.results);
 	}).change();	
 
 	/*
-	*  Take name clicke form a to z listing and display them in live area
+	*  Take name click form a to z listing and display them in live area
 	*/
 	$("#addalpha").click(function (e) {
 		e.preventDefault(e);
@@ -742,24 +673,7 @@ console.log(trainlog.results);
 			}
 	});					
 
-	// drag and drop
-		$("ul.droptrue").sortable({
-			connectWith: 'ul',
-			opacity: 0.6,
-			update : updatePostOrder
-		});
 
-		
-//		$("#sortable1, #sortable2").disableSelection();
-		$("#sortable1, #sortable2").css('minHeight',$("#sortable1").height()+"px");
-	
-			function updatePostOrder() { 
-			var arrorder = [];
-				$("#sortable1 .ui-state-default").each(function(){
-				arrorder.push($(this).attr('id'));
-				});
-				$('#postOrder').val(arrorder.join(','));
-			}
 			
 	// need to identify which swimmers css markup has been clicked
 	$("#contactin").click(function(e){
@@ -786,42 +700,170 @@ console.log(trainlog.results);
 	});
 	
 	currentsetset = 'int-' + $("#swiminterval").val() + 'sec ' + $("#swimstyle").val() + ' ' + $("#swimstroke").val() + ' ' + $("#swimtechnique").val() + ' ' + $("#swimdistance").val() + ' ' + $("#swimsplit").val();
-$("#liveswimset").text('live: ' + currentsetset);	
+	$("#liveswimset").text('live: ' + currentsetset);
 
-	/*
-	*  Dapp connectiviity control
+	
+	liveLogic.setwelcomeMessage();		
+
+	/**
+	*  used when email sign in is active
 	*
 	*/
-	$(".D-apis").click(function(e) {
-		e.preventDefault(e);
-		var $sotgt = $(e.target);			
-//console.log($sotgt);
-		idclick = $($sotgt).attr("id");
-//console.log(idclick );
-		switch(idclick){
-						
-			case"bitcoin-api-status":
+	$("#ifsignedin").click(function(e) {
+			e.preventDefault(e);
+			var $sotgt = $(e.target);
+		if ($sotgt.is("#signincloser")) {
+
+			$("#ifsignedin").fadeOut("slow");
+				//$("#ifsignedin").hide();	
+			$("#loadlaneselect").hide();
+			$("#syncdata").hide();
+			$("#clearpouchdb").hide();
+			$("#sortable1").empty();
+			$("#signinopener").show();
+			$("#signupstart").show();
+
+			// need to tell the server of the log out too
+			$.get("/signout/" + $.cookie("traintimer"), function(resultout){
 				
-			
-			break;
-			
-			case"Dsensor-api-status":
-				$("#dshare-api-add").show();
-				$("#Dsensor-api-status").text('live');
-				$("#Dsensor-api-status").css("background-color", "green");
-			
-			break;
-			
-			case"ethereum-api-status":
-				
-			break;
-			
-			case"maidsafe-api-status":
-				
-			break;
+			});
+			$.cookie("traintimer", null);
+
 		}
+					
+	});	
+
+    $("#signinopener").click(function(e) {
+        usernamein = '';
+        passwordin = '';
+        cookieidhash = '';
+        passwordhash= '';
+    // sigin modal
+    loginhtml = '';
+    loginhtml += '<div>Welcome, to Train Timer </div>';
+    loginhtml += '<form method="post" action="#" id="siginform" >';
+    loginhtml += '<div><label for="name">Username</label><input id="name" class="text ui-widget-content ui-corner-all" type="text" title="name" size="16" ></div>';
+    loginhtml += '<div><label for="password">Password</label><input id="password" class="text ui-widget-content ui-corner-all" type="password" value="" name="password" size="16" ></div></form>';
+    loginhtml += '<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix"> <div class="ui-dialog-buttonset"><button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" type="button" role="button" aria-disabled="false"><span class="ui-button-text">Sign me in</span></button></div></div><div id="responsemessage"></div>';
+
+    $("#siginformarea").dialog({
+            autoOpen: false,
+            height: 340,
+            width: 260, 
+            title: 'Signin to Train Timer',
+            buttons: {
+                                        "Sign me in": function() {
+                                            // need to make couchdb call to accept user details
+                                        usernamein = $("#name").val();
+                                        passwordin = $("#password").val();                                            
+
+                                            hashCode = function(str){
+                                                var hash = 0;
+                                                if (str.length === 0) return hash;
+                                                for (i = 0; i < str.length; i++) {
+                                                        char = str.charCodeAt(i);
+                                                        hash = ((hash<<5)-hash)+char;
+                                                        hash = hash & hash; // Convert to 32bit integer
+                                                }
+                                                return hash;
+						};
+                                        passwordhash = hashCode(passwordin);
+                                        cookieidhash = hashCode((usernamein + passwordin));                                    
+                                            
+                                        this.acceptdetails = '';
+        
+                                                                                                // Wrap up the PUT request execution.
+        var makePUTRequest = function(){
+
+            // Make the PUT request.
+            $.ajax({
+                type: "GET",
+                url: "http://www.mepath.co.uk:8833/signinmepath/" + usernamein + '/' + cookieidhash + '/' + passwordin,
+                contentType: "application/json",
+                dataType: "text",
+success: function( resultback ){
+
+					this.acceptdetails = JSON.parse(resultback);
+					
+					if(this.acceptdetails.signin == 'passed') {		
+												$.cookie("traintimer", cookieidhash,  { expires: 7 });
+												$("#ifsignedin").show();	
+												$("#ifsignedin").html('<a class="control-text" text="SignOut" title="signout" href="#"  id="signincloser" >Sign-out</a> ' + usernamein );
+												$("#siginformarea").dialog( "close" );
+												$("#signinopener").hide();
+												$("#sortable1").empty();
+												$("#signupstart").hide();
+												$("#syncdata").show();
+												$("#clearpouchdb").show();
+										
+																				
+												}
+												else {
+													$("#responsemessage").html('Signin Failed, try again');
+												}
+
+				},
+				error: function( error ){
+					// Log any error.
+//console.log( "ERROR:", error );
+				},
+				complete: function(){
+
+				}
+			});
+
+		};
+
+		// Execute the PUT request.
+		makePUTRequest();
+
+										},
+										Cancel: function() {
+										$( this ).dialog( "close" );
+										}
+
+			},
+			close: function() {
+			$("#name").val( "" );
+			$("#password").val( "" );
+			cookieidhash = '';
+			passwordhash= '';
+				
+			}
+
+		});
+	$("#siginformarea").show();
+	$("#siginformarea").dialog('open');
+
+		// prevent the default action, e.g., following a link
+		return false;
+
+	});	
+	
+	/**
+	* reset website
+	*
+	*/
+	$(window).unload( function () { 
+
+		passwordin = '';
+		$("#loadlaneselect").hide();
+		$("#loadswimmers").hide();
+		$("#addnewswimmer").hide();
+		$("#syncdata").hide();
+		$("#clearpouchdb").hide();
+		$("#sortable1").empty();
+		$("#signinopener").show();
+
+			// need to tell the server of the log out too
+		$.get("/signout/" + $.cookie("traintimer"), function(resultout){
+					});
+		$.cookie("traintimer", null);
+		//alert("You haved signed out of TrainTimer");
 
 	});
+	
+
 	
 		
 });
