@@ -671,6 +671,43 @@ label {
 	font-size:1.8em;
 }
 
+/**
+*
+* Dapps API connetivity status
+*
+*/
+.D-apis {
+	display:inline-block;
+	width:90px;
+	vertical-align:middle;
+}
+
+/**
+*
+* Dapps API add message
+*
+*/
+#dshare-api-add
+ {
+	display:block;
+	padding-top:40px;
+	margin:auto;
+	width:400px;
+	text-align:center;
+	vertical-align:middle;
+}
+
+/**
+*
+* status color api
+*
+*/
+#bitcoin-api-status, #Dsensor-api-status, #ethereum-api-status , #madesafe-api-status  {
+	display:block;
+	vertical-align:middle;
+	background: grey;
+}
+
 
 @media screen and (max-width: 320px) {
 

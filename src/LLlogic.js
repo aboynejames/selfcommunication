@@ -14,6 +14,7 @@ var llLogic = function(localDB, localHTML) {
 	this.livepouch = localDB;
 	this.liveHTML = localHTML;
 	this.nameholder = {};
+	this.emailholder = {};
 	this.idname = '';
 	this.tokenid = '';
 	
@@ -182,6 +183,17 @@ llLogic.prototype.frameworklogic = function(intentionin) {
 llLogic.prototype.setNameID = function(namein, idin) {
 		
 	this.nameholder[idin] = namein;
+	
+};
+
+/**
+* Set the ids and email
+* @method setEmailID		
+*
+*/	
+llLogic.prototype.setEmailID = function(emailin, idin) {
+		
+	this.emailholder[idin] = emailin;
 	
 };
 

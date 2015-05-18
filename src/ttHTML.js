@@ -116,7 +116,7 @@ ttHTML.prototype.viewdataHeader = function(swimmerlist) {
 *
 */	
 ttHTML.prototype.realtimesplitsdiff = function(displayIN, spidint) {
-console.log(displayIN);
+
 	$splive = '#splits'+spidint;
 	$analysislive = '#analysis'+spidint;
 

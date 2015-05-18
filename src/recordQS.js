@@ -141,10 +141,8 @@ recordQS.prototype.recordHTMLset = function(commdatein) {
 recordQS.prototype.swimdataCloud = function(cloudsave) {
 
 		var cloudready = JSON.stringify(cloudsave);
-	
 		var formdataurl = cloudurl+ '/swimdatasave/' + liveLogic.idname + '/token/' + liveLogic.tokenid;
-
-            // Make the PUT request.
+		// Make the PUT request.
 		$.ajax({
 			type: "POST",
 			url: formdataurl,
@@ -158,10 +156,12 @@ recordQS.prototype.swimdataCloud = function(cloudsave) {
 							var serverdatain = JSON.parse(saveback);
 	
 							// does this individual have data?  If not provide links enter data or sportsBOX
-							if(serverdatain.save ==  "passed")
+							if(serverdatain.save ==  "emailIDpassed")
 							{
 								$("#syncbackup").html('finished');	
-	
+								// only delete local data entries, not ID information
+console.log('delete local record after cloud');									
+								livepouch.deleteDoc(cloudsave.idcouch);
 								
 							}
 							else
@@ -172,6 +172,12 @@ recordQS.prototype.swimdataCloud = function(cloudsave) {
 						error: function( error ){
 					// Log any error.
 //console.log( "ERROR:", error );
+							if(error.status == 404)
+							{
+								$("#syncbackup").html('Access to cloud not available, please logout and signin again.');	
+								
+							}
+							
 						},
 						complete: function(){
 

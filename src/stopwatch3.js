@@ -150,7 +150,7 @@ console.log('title = ' + this.identifer);
 						addswimform = '<form class="addswimmer-form" method="post" action="#" id="newmasteradd" >';
 						addswimform += '<ul><li>Enter name and allocate to a lane</li>';
 						addswimform += '<li><label for="name">Name:</label><input type="text"  id="newmastid" title="swimmername"  name="newmastid"  /><span class="form_hint">Please enter a name</span></li>';
-
+						addswimform += '<li><label for="emailaddress">email:</label><input type="text"  id="emailid"   name="emailid"  /><span class="form_hint">Please enter an email address</span></li>';
 						addswimform += '<li><label for="lane">Group:</label>' + lanelist + '<span class="form_hint">Set a group number</span></li>';
 						addswimform += '<li><button class="submit" type="submit"  id="newmasteradd" >Add swimmer</button></li></ul></form>';
 						addswimform += '<div id="newswimerror"></div>';						

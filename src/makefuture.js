@@ -64,7 +64,7 @@ makeProgramme.prototype.makeLogic = function(madeactionin, targetin) {
 											
 			newjsoncomm.commid = datein;//commgroupdata[dataid].dataset.commid;
 			newjsoncomm.commdate = datestringday;
-			newjsoncomm.swimmerid = [11111111,222222,333333]; // pick up from list commgroupdata;
+			//newjsoncomm.swimmerid = [11111111,222222,333333]; // pick up from list commgroupdata;
 			newjsoncomm.communication = swimgroupcomm;				
 
 			});

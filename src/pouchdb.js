@@ -97,6 +97,24 @@ pouchdbSettings.prototype.getDoc = function(callbackin, docid) {
 * @method putDoc		
 *
 */	
+pouchdbSettings.prototype.putSingleDoc = function(docidupdate) {
+
+	this.livepouch.put({ _id: 'mydoc', _rev: docidupdate, title: ''}).then(function (response) {
+	  // handle response
+console.log('single update response');
+console.log(response);		
+	}).catch(function (err) {
+console.log('erro put single');		
+	console.log(err);
+	});
+	
+};
+
+/**
+*  Update specific document if ID provided
+* @method putDoc		
+*
+*/	
 pouchdbSettings.prototype.putDoc = function(designdoc) {
 
 	this.livepouch.put(designdoc, function(err, response) {
@@ -145,14 +163,14 @@ pouchdbSettings.prototype.mapQueryswimmers = function(callbackin) {
 pouchdbSettings.prototype.mapQueryname = function(lanein, callbackin) {	
 			
 	function map(lanequery) {
-			
+//console.log(lanequery);			
 		if(lanequery.lanetrain) {
-			emit(lanequery.lanetrain, [lanequery.swimmerid, lanequery.name]);
+			emit(lanequery.lanetrain, [lanequery.swimmerid, lanequery.name, lanequery.emailid]);
 		}
 	}
 
 	db.query({map: map}, {reduce: false}, function(err, response) {
-		
+	
 		callbackin(response);
 	});
 };

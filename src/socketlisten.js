@@ -11,7 +11,7 @@
 */
 var llListener = function(starttiming) {
 
-	this.socketpi = io.connect('http://192.168.1.44:8881');
+	this.socketpi = io.connect('http://localhost:8881');
 	starttiming.setsocket(this.socketpi);
 	this.socketpi.emit('swimmerclient', { swimmerdevice: 'localhitchup' });
 	this.activeListeners();

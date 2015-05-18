@@ -21,6 +21,8 @@ $(document).ready(function(){
 
 	$("#setsettings").hide();
 	$("#canvasDiv").hide();
+	$("#dshare-api").hide();
+	$("#dshare-api-add").hide();
 	
 	// create pouchdb object
 	livepouch = new pouchdbSettings();
@@ -293,11 +295,8 @@ success: function( resultback ){
 				
 		});
 		
-
-
-		// get all current doc from pouchdb and pass them on to nodejs to couchdb and delete local data (ideally leave 1 month or user directed future todo )
+		// get all current doc from pouchdb and pass them on to nodejs to couchdb/SAFEnetwork Dapp and delete local pouch data (ideally leave 1 month or user directed future todo )
 		var syncmessage = '<a  href=""><img  id="syncicon" alt="sync in progress" src="images/sync.png" ></a>';
-		
 		localsplitstodelete = [];
 		
 		function localDatalog(callback) {  
@@ -305,13 +304,27 @@ success: function( resultback ){
 			livepouch.filterchangeLog(callback, 'swimmers/nameslist');
 			livepouch.filterchangeLog(callback, 'session/sessionlist');
 			livepouch.filterchangeLog(callback, 'communication/commlist');			
-		}  
+		};
 
 		localDatalog( function(trainlog) {
-	
 			// need to differenciate between the type
 			if(trainlog.results[0].doc.session)
 			{
+				// get id email details to pass to decentralised or cloud
+				if(liveLogic.nameholder.length > 0 && liveLogic.emailholder.length > 0)
+				{
+					// all the id and email address are available				
+				
+				}
+				else
+				{
+					// get list of name id email
+					
+					
+				}
+				
+				clouddatalist = {};
+				peernetworknotified = {};
 				// save the training data and delete ready for next batch of data
 				$("#syncbackup").html(syncmessage);				
 				trainlog.results.forEach(function(rowsswimsplit){
@@ -321,13 +334,40 @@ success: function( resultback ){
 						// form JSON to sync back to couch
 						buildsyncsplits = {};
 						buildsyncsplits.session = rowsswimsplit.doc.session;
-						buildsyncsplits.swimmerid =rowsswimsplit.doc.swimmerid;
-						//syncdataforsave =  JSON.stringify(buildsyncsplits);
+						buildsyncsplits.swimmerid = rowsswimsplit.doc.swimmerid;
+						buildsyncsplits.email = 1212;		
+					
+						//keep track of id of data being sent.
+						clouddatalist[rowsswimsplit.doc.swimmerid] = 1;
+					
+						// save data locally and back to cloud
 						liveRecord.swimdataCloud(buildsyncsplits);	
-						livepouch.deleteDoc(rowsswimsplit.doc._id);
+						
 					}
 				});
-			
+
+				var liveidlist = Object.keys(clouddatalist);
+				
+				if(liveidlist.length > 0)
+				{
+					var clouddatestart = new Date();
+					var clouddate = Date.parse(clouddatestart);
+					// need to check list of live id via all potential ids
+					var liveidlist = Object.keys(clouddatalist);
+					liveidlist.forEach(function(lslid){ 
+						
+						peernetworkin ={};		
+						peernetworkin.name = liveLogic.nameholder[lslid];
+						peernetworkin.email = liveLogic.emailholder[lslid];
+						peernetworkin.cdate = clouddate;
+						peernetworknotified.peernetwork = "savenetwork";	
+						peernetworknotified.email = 1212;	
+						peernetworknotified[lslid] = peernetworkin;
+					});
+console.log(peernetworknotified);
+						liveRecord.swimdataCloud(peernetworknotified);							
+				}
+				
 			}
 			else if(trainlog.results[0].doc.commdate)
 			{
@@ -336,8 +376,18 @@ success: function( resultback ){
 			}
 			else if (trainlog.results[0].doc.name)
 			{
-				// do nothing, keep all identity info local copy
-			
+console.log('post call to save data');				
+console.log(trainlog.results);				
+				// send all the id back to the cloud and from there if multi ID will be contacted via emailemailemail
+				trainlog.results.forEach(function(rowsswimsplit){
+					// form JSON to sync back to couch
+					buildsid = {};
+					buildsid.idlocal = rowsswimsplit.doc.swimmerid;
+					buildsid.email =rowsswimsplit.doc.emailid;
+					buildsid.idcouch = rowsswimsplit.doc._id;	
+					// save data locally and back to cloud
+					liveRecord.swimdataCloud(buildsid);
+				});
 			}
 		//  TODO should get a cloud update of average, summary statistics and save/update locally
 			
@@ -348,24 +398,24 @@ success: function( resultback ){
 	$("#ifsignedin").click(function(e) {
 			e.preventDefault(e);
 			var $sotgt = $(e.target);
-        if ($sotgt.is("#signincloser")) {
+		if ($sotgt.is("#signincloser")) {
 
-					$("#ifsignedin").fadeOut("slow");
-						//$("#ifsignedin").hide();	
-					$("#loadlaneselect").hide();
-					$("#syncdata").hide();
-					$("#clearpouchdb").hide();
-					$("#sortable1").empty();
-					$("#signinopener").show();
-					$("#signupstart").show();
-	
-					// need to tell the server of the log out too
-						$.get("/signout/" + $.cookie("traintimer"), function(resultout){
-							
-						});
-					$.cookie("traintimer", null);
+			$("#ifsignedin").fadeOut("slow");
+				//$("#ifsignedin").hide();	
+			$("#loadlaneselect").hide();
+			$("#syncdata").hide();
+			$("#clearpouchdb").hide();
+			$("#sortable1").empty();
+			$("#signinopener").show();
+			$("#signupstart").show();
 
-				}
+			// need to tell the server of the log out too
+			$.get("/signout/" + $.cookie("traintimer"), function(resultout){
+				
+			});
+			$.cookie("traintimer", null);
+
+		}
 					
 	});
 		
@@ -381,70 +431,78 @@ success: function( resultback ){
 				
 				var $tgt = $(e.target);
 	
-		if ($tgt.is("#newmasteradd")) {
+			if ($tgt.is("#newmasteradd")) {
 					
-					// need to be both a name and a lane number validation
-					newmastnameis = $("#newmasteradd input#newmastid ").val();
-					newlane = $("#thelaneoptionsnew").val();
-	
-					if(newmastnameis.length > 0 && (newlane.length > 0 && newlane != -1) )
-					{
-												hashCode = function(str){
-												var hash = 0;
-												if (str.length === 0) return hash;
-												for (i = 0; i < str.length; i++) {
-														char = str.charCodeAt(i);
-														hash = ((hash<<5)-hash)+char;
-														hash = hash & hash; // Convert to 32bit integer
-												}
+				// need to be both a name and a lane number validation
+				newmastnameis = $("#newmasteradd input#newmastid ").val();
+				newemailis = $("#newmasteradd input#emailid ").val();				
+				newlane = $("#thelaneoptionsnew").val();
 
-												return hash;
-												};
-												var newidnumberstart = new Date();
-												newswimmerguid = Date.parse(newidnumberstart);
-							
-						newmastidish = hashCode(newmastnameis);
-						newmastidisrand = Math.floor((Math.random()*10000000)+1);
-									
-						newmastidis = newmastidisrand + '-' + newmastidish;														
-					
-// need to save new master to couch, name and masters id,  validate unique ID number
+				if(newmastnameis.length > 0 && (newlane.length > 0 && newlane != -1) )
+				{
+					hashCode = function(str){
+					var hash = 0;
+					if (str.length === 0) return hash;
+					for (i = 0; i < str.length; i++) {
+							char = str.charCodeAt(i);
+							hash = ((hash<<5)-hash)+char;
+							hash = hash & hash; // Convert to 32bit integer
+					}
+
+						return hash;
+					};
+				
+					var newidnumberstart = new Date();
+					newswimmerguid = Date.parse(newidnumberstart);
+					newmastidish = hashCode(newmastnameis);
+					newmastidisrand = Math.floor((Math.random()*10000000)+1);
+					newmastidis = newmastidisrand + '-' + newmastidish;														
+					// need to save new master to couch, name and masters id,  validate unique ID number
 					firstsavenewmaster = {};
 					firstsavenewmaster.name = newmastnameis;
 					firstsavenewmaster.swimmerid = newmastidis;
-					firstsavenewmaster.lanetrain	= newlane;
+					firstsavenewmaster.emailid = newemailis;
+					firstsavenewmaster.lanetrain = newlane;		
 					jsonfirstsavenewmaster =  JSON.stringify(firstsavenewmaster);
-
-						//  make save to poudbfirst
-						livepouch.singleSave(firstsavenewmaster);	
-				
-				$("#newmaster").hide();
-// add html code for new swimmer added
+					//  make save to poudbfirst
+					livepouch.singleSave(firstsavenewmaster);	
+						
+					$("#newmaster").hide();
+					// add html code for new swimmer added
 					newswimcode = '';		
 					newswimcode = liveHTML.fromswimmers(newmastnameis, newmastidis);
-					liveLogic.setNameID(newmastnameis, newmastidis);	
-							
-				$("#sortable1").append(newswimcode);
-				$("#saveconfirmswimmer").text('new master added');
-				$("#saveconfirmswimmer").show();
-				$("#saveconfirmswimmer").fadeOut("slow");
-				$("#addswimmer").attr("title", "on");
-				$(".peredit").hide();
-				$(".peranalysis").hide();		
-				
-				$("#controloptions").hide();
-				$(".peredit").hide();
-				$(".historicalchart").hide();
-				$(".historicalsummary").hide();
-				$(".historicalbio").hide();
-				$("#viewdata").attr("title", "on");
-				$("#startsort").attr("title", "on");
-				$("#loadlane").attr("title", "on");
-				$("#loadlane").attr("class", "control-text");
-				
-				$(".social").hide();
-				$("#socialcontext").css('background', 'white');		
-				$("#socialcontext").data("socialstatus", "on");		
+					liveLogic.setNameID(newmastnameis, newmastidis);
+					liveLogic.setNameID(newemailis, newmastidis);	
+					
+					// send email with ID
+					// check if sigined in online if not, keep record locally and then send mail when next online.
+					buildsid = {};
+					buildsid.idlocalnew = newmastidis;
+					buildsid.email = newmastnameis;
+					// save data locally and back to cloud
+					liveRecord.swimdataCloud(buildsid);
+								
+					$("#sortable1").append(newswimcode);
+					$("#saveconfirmswimmer").text('new master added');
+					$("#saveconfirmswimmer").show();
+					$("#saveconfirmswimmer").fadeOut("slow");
+					$("#addswimmer").attr("title", "on");
+					$(".peredit").hide();
+					$(".peranalysis").hide();		
+					
+					$("#controloptions").hide();
+					$(".peredit").hide();
+					$(".historicalchart").hide();
+					$(".historicalsummary").hide();
+					$(".historicalbio").hide();
+					$("#viewdata").attr("title", "on");
+					$("#startsort").attr("title", "on");
+					$("#loadlane").attr("title", "on");
+					$("#loadlane").attr("class", "control-text");
+					
+					$(".social").hide();
+					$("#socialcontext").css('background', 'white');		
+					$("#socialcontext").data("socialstatus", "on");		
 
 				}
 				else
@@ -462,7 +520,7 @@ success: function( resultback ){
 					$("#newswimerror").html(adderrormessage);
 				}
 			}
-			
+		
 	});
 		
 	/*
@@ -492,6 +550,7 @@ success: function( resultback ){
 								//pass the lane data to get html ready
 								presentswimmer += liveHTML.fromswimmers(rowswimrs.value[1], rowswimrs.value[0]);
 								liveLogic.setNameID(rowswimrs.value[1], rowswimrs.value[0]);
+								liveLogic.setEmailID(rowswimrs.value[2], rowswimrs.value[0]);
 								}
 						});
 
@@ -564,7 +623,7 @@ success: function( resultback ){
 
 						presentswimmer = '';
 						presentswimmer = '<form id="alphaswimmeradd" class="menu-text" action="#" method="post">';					
-					rtmap.rows.forEach(function(rowswimrs){
+						rtmap.rows.forEach(function(rowswimrs){
 						getfirstletter = rowswimrs.value[1].charAt(0);
 						makelettersmall = getfirstletter.toLowerCase();
 						
@@ -603,10 +662,12 @@ success: function( resultback ){
 		// which name checked?
 		swimnamealpha = $tgt.text();
 		swimidalpha = $tgt.attr("id");
+		// need to look up email id TODO
 
 		// prepare list box  select and append HTML
 		presentswimmeralpha = liveHTML.fromswimmers(swimnamealpha, swimidalpha);
 		liveLogic.setNameID(swimnamealpha, swimidalpha);
+		liveLogic.setNameID(swimnamealpha, 'empty');
 
 		$("#sortable1").append(presentswimmeralpha);
 	
@@ -662,9 +723,9 @@ success: function( resultback ){
 			$("#loadclearswimmers").hide();
 			$("#loadlane").attr("title", "on");
 			$("#loadlane").attr('class', 'control-text');
-				$(".social").hide();
-				$("#socialcontext").css('background', 'white');		
-				$("#socialcontext").data("socialstatus", "on");		
+			$(".social").hide();
+			$("#socialcontext").css('background', 'white');		
+			$("#socialcontext").data("socialstatus", "on");		
 
 	});	
 	
@@ -675,10 +736,10 @@ success: function( resultback ){
 		e.preventDefault(e);
 			var $tgt = $(e.target);
 
-			if ($tgt.is("#aselectswimmer")) {
+			if ($tgt.is("#aselectswimmer")) 
+			{
 				aselectswimmerlist = $(".demo input#aselectswimmer ").val();			
-
-				}
+			}
 	});					
 
 	// drag and drop
@@ -725,6 +786,42 @@ success: function( resultback ){
 	});
 	
 	currentsetset = 'int-' + $("#swiminterval").val() + 'sec ' + $("#swimstyle").val() + ' ' + $("#swimstroke").val() + ' ' + $("#swimtechnique").val() + ' ' + $("#swimdistance").val() + ' ' + $("#swimsplit").val();
-$("#liveswimset").text('live: ' + currentsetset);			
+$("#liveswimset").text('live: ' + currentsetset);	
+
+	/*
+	*  Dapp connectiviity control
+	*
+	*/
+	$(".D-apis").click(function(e) {
+		e.preventDefault(e);
+		var $sotgt = $(e.target);			
+//console.log($sotgt);
+		idclick = $($sotgt).attr("id");
+//console.log(idclick );
+		switch(idclick){
+						
+			case"bitcoin-api-status":
+				
+			
+			break;
+			
+			case"Dsensor-api-status":
+				$("#dshare-api-add").show();
+				$("#Dsensor-api-status").text('live');
+				$("#Dsensor-api-status").css("background-color", "green");
+			
+			break;
+			
+			case"ethereum-api-status":
+				
+			break;
+			
+			case"maidsafe-api-status":
+				
+			break;
+		}
+
+	});
+	
 		
 });

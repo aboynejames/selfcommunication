@@ -35,6 +35,12 @@ var spec = describe("Setup and operation of pouchdb local database store", funct
 		//buster.assert.isArray();
 		//buster.assert.equals(, '1000.00');
 	}); 
+	
+	it("check update singleDoc via put", function () {
+
+		buster.assert.isFunction(this.testpouch.putSingleDoc);
+	
+	}); 
 
 	it("check updatesingle function", function () {
 	   
