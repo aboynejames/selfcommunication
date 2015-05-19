@@ -126,7 +126,7 @@ nav {
 }
 
 .record {
-		display:inline;
+	display:inline;
 	margin-left:1em;
    -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
     -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
@@ -233,7 +233,7 @@ nav {
     text-shadow:1px 1px 0px #ffffff;
 }
 
-#toolscontext, #poolcontext {
+#toolscontext, #poolcontext, #analysiscontext {
 	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
     -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
     box-shadow:inset 0px 1px 0px 0px #ffffff;
@@ -648,7 +648,7 @@ label {
 	border:1px solid #CCCCCC;
 	font-size:1.0em;
 	width:60%;
-	height:120px;
+	height:auto;
 	clear:both;
 }
 

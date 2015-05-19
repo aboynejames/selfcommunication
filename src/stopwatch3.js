@@ -31,532 +31,480 @@
 */		 
 SwimtimeController.prototype.identifyswimmer = function(swimtitle, clickid) {
 
-		this.identifer = swimtitle;
-		this.clicktype = clickid;
+	this.identifer = swimtitle;
+	this.clicktype = clickid;
 console.log('clickid= ' + this.clicktype);
 console.log('title = ' + this.identifer);		
-		this.activetimeclock.startclock.load();	
-			
-		if(clickid == "split" || clickid == "stop" || clickid == "peranalysisid" || clickid =="pereditidremove" ){
+	this.activetimeclock.startclock.load();	
+		
+	if(clickid == "split" || clickid == "stop" || clickid == "peranalysisid" || clickid =="pereditidremove" )
+	{
+console.log('stopwatch function called');		
 		this.activetimeclock.splitswimmerid(this.identifer);
 	}
-						
-			switch(this.clicktype){
-
-			case "start": 
+				
+	switch(this.clicktype){
+		
+		case "start": 
 			this.activetimeclock.startclock.startStop();
-			break;
+			console.log('swithc in stopwatch' );
+		break;
+		
+		case "split":
+		this.activetimeclock.split(this.identifer);
+		break;
+
+		case "stop":	
+		this.activetimeclock.stop(this.identifer);
+		break;
 			
-			case "split":
-			this.activetimeclock.split(this.identifer);
-			break;
+		case "reset": 
+		this.activetimeclock.startclock.reset();
+		break;
+			
+		case "save":	
+			setsaveallowed = $.cookie("traintimer");
+			$("#confirmsave").show();
+			$("#confirmsave").text('Saved');
+			$("#confirmsave").fadeOut(1000);
+			// prepare the data TODO abstract out to a function
+			var sptoday = new Date();
+			datesplitnumber = Date.parse(sptoday);//Date.parse(cleandata["swimstatus"]['swimdate']);
+			
+			swimstyle = $("#swimstyle").val();
+			swimstroke = $("#swimstroke").val();
+			swimtechnique = $("#swimtechnique").val();
+			swimdistance = $("#swimdistance").val();
+			swimsplit = $("#swimsplit").val();
+			// form swim data
+			swimdatastatus = {};
+			swimdatastatus.swimdate = sptoday;
+			swimdatastatus.swimstyle = swimstyle;
+			swimdatastatus.swimstroke = swimstroke;
+			swimdatastatus.swimtechnique = swimtechnique;
+			swimdatastatus.swimdistance = swimdistance;
+			swimdatastatus.swimsplit = swimsplit;
 
-			case "stop":	
-			this.activetimeclock.stop(this.identifer);
-			break;
+			// route to server side URL
+			stxt = {};
+			stxt.swimstatus = swimdatastatus;
+			stxt.splitdata = this.activetimeclock.sparray;		
+			stxtstring =  JSON.stringify(stxt);											
+			// make socket send to get real time display anywhere
+			//var socket = io.connect();
+			//socket.emit('splitsdatalive', stxtstring);	
 				
-			case "reset": 
-			this.activetimeclock.startclock.reset();
-			break;
+			// save to localpouchdb need to prepare buld array json structure 
+				cleandatakey = {};
+				bulksplits = [];
+				i = 0;
+			cleandatakey= Object.keys(stxt.splitdata);
+			cleandatakey.forEach(function(bulkkey){
+				newjsonswim = {};
+
+			if(stxt.splitdata[bulkkey].length > 0 ) 
+			{									
+
+				newjsonswim.swimmerid = '';
+				newjsonswim.session = {};
+				activesplitsb  = [];	
+				activesplitsb = stxt.splitdata[bulkkey];
+				newjsonswim.swimmerid = bulkkey;
+				newjsonswim.session.sessionid = datesplitnumber;	
+				newjsonswim.session.swiminfo = stxt.swimstatus;	
+				newjsonswim.session.splittimes	= activesplitsb;
 				
-			case "save":	
-					setsaveallowed = $.cookie("traintimer");
-									$("#confirmsave").show();
-									$("#confirmsave").text('Saved');
-									$("#confirmsave").fadeOut(1000);
-									// prepare the data TODO abstract out to a function
-									var sptoday = new Date();
-									datesplitnumber = Date.parse(sptoday);//Date.parse(cleandata["swimstatus"]['swimdate']);
-									
-									swimstyle = $("#swimstyle").val();
-									swimstroke = $("#swimstroke").val();
-									swimtechnique = $("#swimtechnique").val();
-									swimdistance = $("#swimdistance").val();
-									swimsplit = $("#swimsplit").val();
-									// form swim data
-									swimdatastatus = {};
-									swimdatastatus.swimdate = sptoday;
-									swimdatastatus.swimstyle = swimstyle;
-									swimdatastatus.swimstroke = swimstroke;
-									swimdatastatus.swimtechnique = swimtechnique;
-									swimdatastatus.swimdistance = swimdistance;
-									swimdatastatus.swimsplit = swimsplit;
+				//livepouch.singleSave(newjsonswim);
+				bulksplits[i] = newjsonswim;
+				i++;
+				}		
+				// collect array and then do bulk save as single saving timing out.
 
-								// route to server side URL
-								stxt = {};
-								stxt.swimstatus = swimdatastatus;
-								stxt.splitdata = this.activetimeclock.sparray;		
-								stxtstring =  JSON.stringify(stxt);											
-								// make socket send to get real time display anywhere
-								//var socket = io.connect();
-								//socket.emit('splitsdatalive', stxtstring);	
-									
-								// save to localpouchdb need to prepare buld array json structure 
-									cleandatakey = {};
-									bulksplits = [];
-									i = 0;
-								cleandatakey= Object.keys(stxt.splitdata);
-								cleandatakey.forEach(function(bulkkey){
-									newjsonswim = {};
+			});
 
-								if(stxt.splitdata[bulkkey].length > 0 ) 
-								{									
-
-									newjsonswim.swimmerid = '';
-									newjsonswim.session = {};
-									activesplitsb  = [];	
-									activesplitsb = stxt.splitdata[bulkkey];
-									newjsonswim.swimmerid = bulkkey;
-									newjsonswim.session.sessionid = datesplitnumber;	
-									newjsonswim.session.swiminfo = stxt.swimstatus;	
-									newjsonswim.session.splittimes	= activesplitsb;
-									
-									//livepouch.singleSave(newjsonswim);
-									bulksplits[i] = newjsonswim;
-									i++;
-									}		
-									// collect array and then do bulk save as single saving timing out.
-
-								});
-
-									livepouch.bulkSave(bulksplits);
-							
-								setsaveallowed = 
-								$.post("/save/" + setsaveallowed, stxtstring ,function(result){
-								// put a message back to UI to tell of a successful save TODO
+				livepouch.bulkSave(bulksplits);
+		
+			setsaveallowed = 
+			$.post("/save/" + setsaveallowed, stxtstring ,function(result){
+			// put a message back to UI to tell of a successful save TODO
+			
+			});
+		break;
+			
+		case "addswimmer":
+						
+			addswimmerstatus = $("#addswimmer").attr("title");
+			if(addswimmerstatus == 'on') {
 								
-								});
-			break;
+				lanelist = '<select id="thelaneoptionsnew" class="lanewidthnew" name="lanegroupnew" >';
+				lanelist +=	'<option  selected="-" value="-1">-</option>';
+				lanelist +=	'<option value="1">1</option>';
+				lanelist +=	'<option value="2">2</option>';
+				lanelist +=	'<option value="3">3</option>';
+				lanelist +=	'<option value="4">4</option>';
+				lanelist +=	'<option value="5">5</option>';
+				lanelist +=	'<option value="6">6</option>';
+				lanelist +=	'<option value="7">7</option>';
+				lanelist +=	'<option value="8">8</option>';
+				lanelist +=	'<option value="9">9</option>';
+				lanelist +=	'<option value="10">10</option>';
+				lanelist +=	'</select>';
+					
+				addswimform = '<form class="addswimmer-form" method="post" action="#" id="newmasteradd" >';
+				addswimform += '<ul><li>Enter name and allocate to a lane</li>';
+				addswimform += '<li><label for="name">Name:</label><input type="text"  id="newmastid" title="swimmername"  name="newmastid"  /><span class="form_hint">Please enter a name</span></li>';
+				addswimform += '<li><label for="emailaddress">email:</label><input type="text"  id="emailid"   name="emailid"  /><span class="form_hint">Please enter an email address</span></li>';
+				addswimform += '<li><label for="lane">Group:</label>' + lanelist + '<span class="form_hint">Set a group number</span></li>';
+				addswimform += '<li><button class="submit" type="submit"  id="newmasteradd" >Add swimmer</button></li></ul></form>';
+				addswimform += '<div id="newswimerror"></div>';						
+				$("#newmaster").html(addswimform);
+				$("#newmaster").show();						
+				$("#addswimmer").attr("title", "off");
+			}
+			else
+			{
+				$("#newmaster").hide();
+				$("#addswimmer").attr("title", "on");
+			}			
+		break;
+			
+		case "startsort":
+		
+			$("#sortable1").sortable( "option", "disabled", false );	
+			editname = $("#startsort").attr("title");
+			if(editname == 'on') {
+				// need to make live all the edit 
+				$(".peredit").show();
+				$(".peranalysis").hide();
+				$("#startsort").attr("title", "off");
+				$("#viewdata").attr("title", "on");
+									
+				$("#analysistype").hide();
+				$(".historicalplace").hide();
+				$(".historicalchart").hide();						
+				$(".historicalsummary").hide();
+				$(".historicalbio").hide();
+				$("#viewdatalive").empty();
+				$("#visualisedata").empty();
+				$(".splitviewrep").remove();
+				$(".splitview").remove();
+				$(".splitviewcompare").remove();
+				$("[class^='peranalysisid']").attr("data-statusanalysis", "on");
+				$("[class^='peranalysisid']").css("color", "#1c94c4");
+				$("[class^='pereditidremove']").attr("data-statusanalysis", "on");
+				$("[class^='perchartid']").attr("data-statusanalysis", "on");
+				$("[class^='perchartid']").css("color", "#1c94c4");
+				$("[class^='persummaryid']").attr("data-statusanalysis", "on");
+				$("[class^='persummaryid']").css("color", "#1c94c4");
+				$("[class^='perbioid']").attr("data-statusanalysis", "on");
+				$("[class^='perbioid']").css("color", "#1c94c4");
+				$(".ui-state-default").css("width", "50%");
+				$("#startsort").attr('class', 'control-textpressed');
+				$("#viewdata").attr('class', 'control-text');
+			}
+			else
+			{
+				$(".peredit").hide();
+				$(".peranalysis").hide();
+				$(".analysislabel").hide();
+				$(".historicalplace").hide();
+				$(".historicalchart").hide();						
+				$(".historicalsummary").hide();
+				$(".historicalbio").hide();
+
 				
-				case "addswimmer":
-								
-					addswimmerstatus = $("#addswimmer").attr("title");
-					if(addswimmerstatus == 'on') {
-										
-						lanelist = '<select id="thelaneoptionsnew" class="lanewidthnew" name="lanegroupnew" >';
-						lanelist +=	'<option  selected="-" value="-1">-</option>';
-						lanelist +=	'<option value="1">1</option>';
-						lanelist +=	'<option value="2">2</option>';
-						lanelist +=	'<option value="3">3</option>';
-						lanelist +=	'<option value="4">4</option>';
-						lanelist +=	'<option value="5">5</option>';
-						lanelist +=	'<option value="6">6</option>';
-						lanelist +=	'<option value="7">7</option>';
-						lanelist +=	'<option value="8">8</option>';
-						lanelist +=	'<option value="9">9</option>';
-						lanelist +=	'<option value="10">10</option>';
-						lanelist +=	'</select>';
-							
-						addswimform = '<form class="addswimmer-form" method="post" action="#" id="newmasteradd" >';
-						addswimform += '<ul><li>Enter name and allocate to a lane</li>';
-						addswimform += '<li><label for="name">Name:</label><input type="text"  id="newmastid" title="swimmername"  name="newmastid"  /><span class="form_hint">Please enter a name</span></li>';
-						addswimform += '<li><label for="emailaddress">email:</label><input type="text"  id="emailid"   name="emailid"  /><span class="form_hint">Please enter an email address</span></li>';
-						addswimform += '<li><label for="lane">Group:</label>' + lanelist + '<span class="form_hint">Set a group number</span></li>';
-						addswimform += '<li><button class="submit" type="submit"  id="newmasteradd" >Add swimmer</button></li></ul></form>';
-						addswimform += '<div id="newswimerror"></div>';						
-						$("#newmaster").html(addswimform);
-						$("#newmaster").show();						
-						$("#addswimmer").attr("title", "off");
-					}
-					else
-					{
-						$("#newmaster").hide();
-						$("#addswimmer").attr("title", "on");
-					}			
-				break;
+				$("#startsort").attr("title", "on");
+				$("[class^='peranalysisid']").attr("data-statusanalysis", "on");
+				$("[class^='peranalysisid']").css("color", "#1c94c4");
+				$("[class^='pereditidremove']").attr("data-statusanalysis", "on");
+				$("[class^='perchartid']").attr("data-statusanalysis", "on");
+				$("[class^='perchartid']").css("color", "#1c94c4");
+				$("[class^='persummaryid']").attr("data-statusanalysis", "on");
+				$("[class^='persummaryid']").css("color", "#1c94c4");
+				$("[class^='perbioid']").attr("data-statusanalysis", "on");
+				$("[class^='perbioid']").css("color", "#1c94c4");
+				$("#sortable1").sortable( "option", "disabled", true );
+				$(".ui-state-default").css("width", "100%");						
+				$("#startsort").attr('class', 'control-text');
+			}
+		
+		break;
 				
-				case "startsort":
+		case "startremove":
+			$("#sortable1").sortable( "option", "disabled", true );	
+			editname = $("#startremove").attr("title");
+			if(editname == 'on') {
+				// need to make live all the edit 
+				$(".peredit").show();
+				$(".peranalysis").hide();
+				$("#startremove").attr("title", "off");
+				$("#viewdata").attr("title", "on");
+									
+				$("#analysistype").hide();
+				$(".historicalplace").hide();
+				$(".historicalchart").hide();						
+				$(".historicalsummary").hide();
+				$(".historicalbio").hide();
+				$("#viewdatalive").empty();
+				$("#visualisedata").empty();
+				$(".splitviewrep").remove();
+				$(".splitview").remove();
+				$(".splitviewcompare").remove();
+				$("[class^='peranalysisid']").attr("data-statusanalysis", "on");
+				$("[class^='peranalysisid']").css("color", "#1c94c4");
+				$("[class^='pereditidremove']").attr("data-statusanalysis", "on");
+				$("[class^='perchartid']").attr("data-statusanalysis", "on");
+				$("[class^='perchartid']").css("color", "#1c94c4");
+				$("[class^='persummaryid']").attr("data-statusanalysis", "on");
+				$("[class^='persummaryid']").css("color", "#1c94c4");
+				$("[class^='perbioid']").attr("data-statusanalysis", "on");
+				$("[class^='perbioid']").css("color", "#1c94c4");
+				$(".ui-state-default").css("width", "50%");
+				$("#startremove").attr('class', 'control-textpressed');
+				$("#viewdata").attr('class', 'control-text');
+			}
+			else
+			{
+				$(".peredit").hide();
+				$(".peranalysis").hide();
+				$(".analysislabel").hide();
+				$(".historicalplace").hide();
+				$(".historicalchart").hide();						
+				$(".historicalsummary").hide();
+				$(".historicalbio").hide();
+
 				
-					$("#sortable1").sortable( "option", "disabled", false );	
-					editname = $("#startsort").attr("title");
-					if(editname == 'on') {
-						// need to make live all the edit 
-						$(".peredit").show();
-						$(".peranalysis").hide();
-						$("#startsort").attr("title", "off");
-						$("#viewdata").attr("title", "on");
-											
-						$("#analysistype").hide();
-						$(".historicalplace").hide();
-						$(".historicalchart").hide();						
-						$(".historicalsummary").hide();
-						$(".historicalbio").hide();
-						$("#viewdatalive").empty();
-						$("#visualisedata").empty();
-						$(".splitviewrep").remove();
-						$(".splitview").remove();
-						$(".splitviewcompare").remove();
-						$("[class^='peranalysisid']").attr("data-statusanalysis", "on");
-						$("[class^='peranalysisid']").css("color", "#1c94c4");
-						$("[class^='pereditidremove']").attr("data-statusanalysis", "on");
-						$("[class^='perchartid']").attr("data-statusanalysis", "on");
-						$("[class^='perchartid']").css("color", "#1c94c4");
-						$("[class^='persummaryid']").attr("data-statusanalysis", "on");
-						$("[class^='persummaryid']").css("color", "#1c94c4");
-						$("[class^='perbioid']").attr("data-statusanalysis", "on");
-						$("[class^='perbioid']").css("color", "#1c94c4");
-						$(".ui-state-default").css("width", "50%");
-						$("#startsort").attr('class', 'control-textpressed');
-						$("#viewdata").attr('class', 'control-text');
-					}
-					else
-					{
-						$(".peredit").hide();
-						$(".peranalysis").hide();
-						$(".analysislabel").hide();
-						$(".historicalplace").hide();
-						$(".historicalchart").hide();						
-						$(".historicalsummary").hide();
-						$(".historicalbio").hide();
-
-						
-						$("#startsort").attr("title", "on");
-						$("[class^='peranalysisid']").attr("data-statusanalysis", "on");
-						$("[class^='peranalysisid']").css("color", "#1c94c4");
-						$("[class^='pereditidremove']").attr("data-statusanalysis", "on");
-						$("[class^='perchartid']").attr("data-statusanalysis", "on");
-						$("[class^='perchartid']").css("color", "#1c94c4");
-						$("[class^='persummaryid']").attr("data-statusanalysis", "on");
-						$("[class^='persummaryid']").css("color", "#1c94c4");
-						$("[class^='perbioid']").attr("data-statusanalysis", "on");
-						$("[class^='perbioid']").css("color", "#1c94c4");
-						$("#sortable1").sortable( "option", "disabled", true );
-						$(".ui-state-default").css("width", "100%");						
-						$("#startsort").attr('class', 'control-text');
-					}
+				$("#startremove").attr("title", "on");
+				$("[class^='peranalysisid']").attr("data-statusanalysis", "on");
+				$("[class^='peranalysisid']").css("color", "#1c94c4");
+				$("[class^='pereditidremove']").attr("data-statusanalysis", "on");
+				$("[class^='perchartid']").attr("data-statusanalysis", "on");
+				$("[class^='perchartid']").css("color", "#1c94c4");
+				$("[class^='persummaryid']").attr("data-statusanalysis", "on");
+				$("[class^='persummaryid']").css("color", "#1c94c4");
+				$("[class^='perbioid']").attr("data-statusanalysis", "on");
+				$("[class^='perbioid']").css("color", "#1c94c4");
+				$("#sortable1").sortable( "option", "disabled", true );
+				$(".ui-state-default").css("width", "100%");						
+				$("#startremove").attr('class', 'control-text');
+			}
+		
+		break;					
 				
-				break;
+		case "peranalysisid":
+			// get the swimmer id and then load up historical data
+			historicalanalysisid = this.identifer; //$("#pereditid").attr("title");
+			analysisstatus = $(".peranalysisid"+ historicalanalysisid).attr("data-statusanalysis");
+
+				if(analysisstatus == 'on')
+				{
+					datacall = livepouch.returndatacallback(idname, "splitdatain");
+					$(".peranalysisid" + historicalanalysisid ).attr("data-statusanalysis", "off");
+					$(".peranalysisid" + historicalanalysisid ).css("color", "#090");
 					
+				}
+				else
+				{
+					$("#historicalanalysis" + historicalanalysisid).empty();
+					$(".peranalysisid" + historicalanalysisid).attr("data-statusanalysis", "on");
+					$(".peranalysisid" + historicalanalysisid ).css("color", "#1C94C4");
 
-				case "startremove":
-					$("#sortable1").sortable( "option", "disabled", true );	
-					editname = $("#startremove").attr("title");
-					if(editname == 'on') {
-						// need to make live all the edit 
-						$(".peredit").show();
-						$(".peranalysis").hide();
-						$("#startremove").attr("title", "off");
-						$("#viewdata").attr("title", "on");
-											
-						$("#analysistype").hide();
-						$(".historicalplace").hide();
-						$(".historicalchart").hide();						
-						$(".historicalsummary").hide();
-						$(".historicalbio").hide();
-						$("#viewdatalive").empty();
-						$("#visualisedata").empty();
-						$(".splitviewrep").remove();
-						$(".splitview").remove();
-						$(".splitviewcompare").remove();
-						$("[class^='peranalysisid']").attr("data-statusanalysis", "on");
-						$("[class^='peranalysisid']").css("color", "#1c94c4");
-						$("[class^='pereditidremove']").attr("data-statusanalysis", "on");
-						$("[class^='perchartid']").attr("data-statusanalysis", "on");
-						$("[class^='perchartid']").css("color", "#1c94c4");
-						$("[class^='persummaryid']").attr("data-statusanalysis", "on");
-						$("[class^='persummaryid']").css("color", "#1c94c4");
-						$("[class^='perbioid']").attr("data-statusanalysis", "on");
-						$("[class^='perbioid']").css("color", "#1c94c4");
-						$(".ui-state-default").css("width", "50%");
-						$("#startremove").attr('class', 'control-textpressed');
-						$("#viewdata").attr('class', 'control-text');
-					}
-					else
-					{
-						$(".peredit").hide();
-						$(".peranalysis").hide();
-						$(".analysislabel").hide();
-						$(".historicalplace").hide();
-						$(".historicalchart").hide();						
-						$(".historicalsummary").hide();
-						$(".historicalbio").hide();
-
-						
-						$("#startremove").attr("title", "on");
-						$("[class^='peranalysisid']").attr("data-statusanalysis", "on");
-						$("[class^='peranalysisid']").css("color", "#1c94c4");
-						$("[class^='pereditidremove']").attr("data-statusanalysis", "on");
-						$("[class^='perchartid']").attr("data-statusanalysis", "on");
-						$("[class^='perchartid']").css("color", "#1c94c4");
-						$("[class^='persummaryid']").attr("data-statusanalysis", "on");
-						$("[class^='persummaryid']").css("color", "#1c94c4");
-						$("[class^='perbioid']").attr("data-statusanalysis", "on");
-						$("[class^='perbioid']").css("color", "#1c94c4");
-						$("#sortable1").sortable( "option", "disabled", true );
-						$(".ui-state-default").css("width", "100%");						
-						$("#startremove").attr('class', 'control-text');
-					}
+				}				
+		break;
 				
-				break;					
-					
-				case "viewdata":
-			// needs swimmerids and names
-				$("#analysistype").show();
+		case "perchartid":
+			// gather data per swimmer to build chart from
+			container = 'historicalchart' + this.identifer;
+			chartstatus = $(".perchartid"+ this.identifer).attr("data-statusanalysis");
 				
-				analysisname = $("#viewdata").attr("title");
-					if(analysisname == 'on') {
-						// need to make live all the edit / analysis feature options
-						$(".peredit").hide();
-						$(".peranalysis").show();
-						$(".peranalysis").show();
-						$("#perrealtime").show();
-						$(".historicalplace").show();
-						$("#viewdata").attr("title", "off");
-						$("#startsort").attr("title", "on");
-						$(".ui-state-default").css("width", "100%");
-						$("#viewdata").attr('class', 'control-textpressed');
-						$("#startsort").attr('class', 'control-text');
-					}
-					else
-					{
-							$(".peredit").hide();
-							$(".peranalysis").hide();
-							$(".analysislabel").hide();
-							$(".historicalplace").hide();
-							$(".historicalchart").hide();						
-							$(".historicalsummary").hide();
-							$(".historicalbio").hide();
-							$("#viewdatalive").empty();
-							$("#visualisedata").empty();
-							$(".splitviewrep").remove();
-							$(".splitview").remove();
-							$(".splitviewcompare").remove();
-						
-							$("#viewdata").attr("title", "on");
-							$("[class^='peranalysisid']").attr("data-statusanalysis", "on");
-							$("[class^='peranalysisid']").css("color", "#1c94c4");
-							$("[class^='pereditidremove']").attr("data-statusanalysis", "on");
-							$("[class^='perchartid']").attr("data-statusanalysis", "on");
-							$("[class^='perchartid']").css("color", "#1c94c4");
-							$("[class^='persummaryid']").attr("data-statusanalysis", "on");
-							$("[class^='persummaryid']").css("color", "#1c94c4");
-							$("[class^='perbioid']").attr("data-statusanalysis", "on");
-							$("[class^='perbioid']").css("color", "#1c94c4");
-							$("#viewdata").attr('class', 'control-text');
-					}
-
-			break;
+				if(chartstatus == 'on')
+				{
 					
-			case "peranalysisid":
-				// get the swimmer id and then load up historical data
-				historicalanalysisid = this.identifer; //$("#pereditid").attr("title");
-				analysisstatus = $(".peranalysisid"+ historicalanalysisid).attr("data-statusanalysis");
-
-					if(analysisstatus == 'on')
-					{
-						datacall = livepouch.returndatacallback(idname, "splitdatain");
-						$(".peranalysisid" + historicalanalysisid ).attr("data-statusanalysis", "off");
-						$(".peranalysisid" + historicalanalysisid ).css("color", "#090");
-						
-					}
-					else
-					{
-						$("#historicalanalysis" + historicalanalysisid).empty();
-						$(".peranalysisid" + historicalanalysisid).attr("data-statusanalysis", "on");
-						$(".peranalysisid" + historicalanalysisid ).css("color", "#1C94C4");
-
-					}
-					
-			break;
-					
-			case "perchartid":
-				// gather data per swimmer to build chart from
-				container = 'historicalchart' + this.identifer;
-				chartstatus = $(".perchartid"+ this.identifer).attr("data-statusanalysis");
-					
-					if(chartstatus == 'on')
-					{
-						
-						livepouch.returndatacallback(this.identifer, "chartdatain");
-						$("#historicalchart" + this.identifer).show();			
-						$(".perchartid" + this.identifer ).attr("data-statusanalysis", "off");
-						$(".perchartid" + this.identifer ).css("color", "#090");
-					
-					}
-					else
-					{
-						$("#historicalchart" + this.identifer).hide();
-						$(".perchartid" + this.identifer).attr("data-statusanalysis", "on");
-						$(".perchartid" + this.identifer).css("color", "#1C94C4");
-					}
-
-			break;
-
-			case "persummaryid":
-				// gather data per swimmer to build chart from
-				container = 'historicalsummary' + this.identifer;
-				chartstatus = $(".persummaryid"+ this.identifer).attr("data-statusanalysis");
-
-					if(chartstatus == 'on')
-					{
-						
-						livepouch.returndatacallback(this.identifer, "persummaryid");
-						$("#historicalsummary" + this.identifer).show();			
-						$(".persummaryid" + this.identifer ).attr("data-statusanalysis", "off");
-						$(".persummaryid" + this.identifer ).css("color", "#090");
-	
-					}
-					else
-					{
-						$("#historicalsummary" + this.identifer).hide();
-						$(".persummaryid" + this.identifer).attr("data-statusanalysis", "on");
-						$(".persummaryid" + this.identifer).css("color", "#1C94C4");
-					}
-
-			break;					
-
-			case "perbioid":
-				// gather data per swimmer to build chart from
-				container = 'historicalbio' + this.identifer;
-				chartstatus = $(".perbioid"+ this.identifer).attr("data-statusanalysis");
-					
-					if(chartstatus == 'on')
-					{
-						$("#historicalbio" + this.identifer).show();			
-						$(".perbioid" + this.identifer ).attr("data-statusanalysis", "off");
-						$(".perbioid" + this.identifer ).css("color", "#090");
-						$("#historicalbio" + this.identifer).html('Age Height Weight Genome');
-					
-					}
-					else
-					{
-						$("#historicalbio" + this.identifer).hide();
-						$(".perbioid" + this.identifer).attr("data-statusanalysis", "on");
-						$(".perbioid" + this.identifer).css("color", "#1C94C4");
-					}
-
-			break;										
-					
-			case "pereditidremove":
-					// remove swimmer from active list					
-					removeid = this.identifer;
-					$("#sortable1 li#" + removeid + ".ui-state-default").remove();
-					
-			break;
-					
-			case "setshow":
-			// hide or show the set settings
-					setshowstatus = $("#setshow").attr("title");
-					if(setshowstatus == 'on') {
-						$(".swimsettings").show();
-						$("#setshow").attr("title", "off");
-						$("#setshow").attr('class', 'control-textpressed');
-					}
-					else
-					{
-						$(".swimsettings").hide();
-						$("#setshow").attr("title", "on");
-						currentsetset = 'int-' + $("#swiminterval").val() + 'sec ' + $("#swimstyle").val() + ' ' + $("#swimstroke").val() + ' ' + $("#swimtechnique").val() + ' ' + $("#swimdistance").val() + ' ' + $("#swimsplit").val();
-$("#liveswimset").text('live: ' + currentsetset);
-						$("#setshow").attr('class', 'control-text');
-					}
-						
-	
-			break;
-
-			case "signupstart":
-				// signup to data services
-					signupstatus = $("#signupstart").attr("title");
-					if(signupstatus == 'on') {
-						$("#signupspace").show();
-						$("#signupstart").attr("title", "off");
-						$("#signupstart").css('color', '#090');
-					}
-					else
-					{
-						$("#signupspace").hide();
-						$("#signupstart").attr("title", "on");
-						$("#signupstart").css('color', '#1C94C4');
-					}
-
-			break;
-					
-			case "contactin":
-				// collect the form data
-				incontact = {};
-				incontact.name = $("#namein").val();
-				incontact.email = $("#emailin").val();
-				incontact.website = $("#websitein").val();
-				incontact.inpassword = $("#inpassword").val();
-				incontact.message = $("#messagein").val();
-				// validate there is name, email message
-				if(incontact.name.length > 0  && incontact.email.length > 0 && incontact.message.length > 0)
-				{ 
-						
-				//formdata = {};
-					formdata =  JSON.stringify(incontact);
-
-				// make a POST call to node.js url
-					$.post("/signupstart/", formdata ,function(resultb){
-						// put a message back to UI to tell of a successful save TODO
-						
-						$("#signupspace").hide();
-						$("#namein").val("");
-						$("#emailin").val("");
-						$("#websitein").val("");
-						$("#messagein").val("");
-						$("#signupspacereply").text(resultb.startbackupreply);
-						$("#formfeedback").empty();
-						$("#signupstart").remove();
-					
-					}, "json");
+					livepouch.returndatacallback(this.identifer, "chartdatain");
+					$("#historicalchart" + this.identifer).show();			
+					$(".perchartid" + this.identifer ).attr("data-statusanalysis", "off");
+					$(".perchartid" + this.identifer ).css("color", "#090");
 				
+				}
+				else
+				{
+					$("#historicalchart" + this.identifer).hide();
+					$(".perchartid" + this.identifer).attr("data-statusanalysis", "on");
+					$(".perchartid" + this.identifer).css("color", "#1C94C4");
+				}
+
+		break;
+
+		case "persummaryid":
+			// gather data per swimmer to build chart from
+			container = 'historicalsummary' + this.identifer;
+			chartstatus = $(".persummaryid"+ this.identifer).attr("data-statusanalysis");
+
+				if(chartstatus == 'on')
+				{
+					
+					livepouch.returndatacallback(this.identifer, "persummaryid");
+					$("#historicalsummary" + this.identifer).show();			
+					$(".persummaryid" + this.identifer ).attr("data-statusanalysis", "off");
+					$(".persummaryid" + this.identifer ).css("color", "#090");
 
 				}
 				else
 				{
-					formfeedback = "Please enter ";
-					if(incontact.name.length === 0)
-					{
-						formfeedback += " a Name ";
-					}
-					if(incontact.email.length === 0)
-					{
-							formfeedback += " Email ";
-					}
-					if(incontact.message.length === 0)
-					{
-						formfeedback += " Swim Club";
-					}
-						$("#formfeedback").html(formfeedback);
-					
+					$("#historicalsummary" + this.identifer).hide();
+					$(".persummaryid" + this.identifer).attr("data-statusanalysis", "on");
+					$(".persummaryid" + this.identifer).css("color", "#1C94C4");
 				}
 
-			break;
-					
-			case "touchpadmode":
-			// show the touchpad status as on or OFF
-					currenttpstatus = $("#touchpadmode").attr("title");
-					if(currenttpstatus == 'on') {
-						$("#touchpadstatus").text('On');
-						$("#touchpadmode").attr("title", "off");
-					}
-					else
-					{
-						$("#touchpadstatus").text('Off');
-						$("#touchpadmode").attr("title", "on");
-					}
-					
-			break;	
+		break;					
 
-			case "twitterin":
-				window.open(cloudurl + "/auth/twitter2", "_self");
-
-			break;
-
-			case "facebookin":
-				window.open(cloudurl  + "/auth/facebook2", "_self");	
-			break;
-
-			case "twitterout":
+		case "perbioid":
+			// gather data per swimmer to build chart from
+			container = 'historicalbio' + this.identifer;
+			chartstatus = $(".perbioid"+ this.identifer).attr("data-statusanalysis");
 				
-				window.open(homeurl, "_self");
+				if(chartstatus == 'on')
+				{
+					$("#historicalbio" + this.identifer).show();			
+					$(".perbioid" + this.identifer ).attr("data-statusanalysis", "off");
+					$(".perbioid" + this.identifer ).css("color", "#090");
+					$("#historicalbio" + this.identifer).html('Age Height Weight Genome');
+				
+				}
+				else
+				{
+					$("#historicalbio" + this.identifer).hide();
+					$(".perbioid" + this.identifer).attr("data-statusanalysis", "on");
+					$(".perbioid" + this.identifer).css("color", "#1C94C4");
+				}
 
-			break;
+		break;										
+				
+		case "pereditidremove":
+				// remove swimmer from active list					
+				removeid = this.identifer;
+				$("#sortable1 li#" + removeid + ".ui-state-default").remove();
+				
+		break;
+				
+		case "setshow":
+		// hide or show the set settings
+				setshowstatus = $("#setshow").attr("title");
+				if(setshowstatus == 'on') {
+					$(".swimsettings").show();
+					$("#setshow").attr("title", "off");
+					$("#setshow").attr('class', 'control-textpressed');
+				}
+				else
+				{
+					$(".swimsettings").hide();
+					$("#setshow").attr("title", "on");
+					currentsetset = 'int-' + $("#swiminterval").val() + 'sec ' + $("#swimstyle").val() + ' ' + $("#swimstroke").val() + ' ' + $("#swimtechnique").val() + ' ' + $("#swimdistance").val() + ' ' + $("#swimsplit").val();
+$("#liveswimset").text('live: ' + currentsetset);
+					$("#setshow").attr('class', 'control-text');
+				}
+		break;
 
-
+		case "signupstart":
+			// signup to data services
+			signupstatus = $("#signupstart").attr("title");
+			if(signupstatus == 'on') {
+				$("#signupspace").show();
+				$("#signupstart").attr("title", "off");
+				$("#signupstart").css('color', '#090');
+			}
+			else
+			{
+				$("#signupspace").hide();
+				$("#signupstart").attr("title", "on");
+				$("#signupstart").css('color', '#1C94C4');
+			}
+		break;
+				
+		case "contactin":
+			// collect the form data
+			incontact = {};
+			incontact.name = $("#namein").val();
+			incontact.email = $("#emailin").val();
+			incontact.website = $("#websitein").val();
+			incontact.inpassword = $("#inpassword").val();
+			incontact.message = $("#messagein").val();
+			// validate there is name, email message
+			if(incontact.name.length > 0  && incontact.email.length > 0 && incontact.message.length > 0)
+			{ 
 					
-			} // closes switch		
+			//formdata = {};
+				formdata =  JSON.stringify(incontact);
+
+			// make a POST call to node.js url
+				$.post("/signupstart/", formdata ,function(resultb){
+					// put a message back to UI to tell of a successful save TODO
+					
+					$("#signupspace").hide();
+					$("#namein").val("");
+					$("#emailin").val("");
+					$("#websitein").val("");
+					$("#messagein").val("");
+					$("#signupspacereply").text(resultb.startbackupreply);
+					$("#formfeedback").empty();
+					$("#signupstart").remove();
+				
+				}, "json");
+			
+
+			}
+			else
+			{
+				formfeedback = "Please enter ";
+				if(incontact.name.length === 0)
+				{
+					formfeedback += " a Name ";
+				}
+				if(incontact.email.length === 0)
+				{
+						formfeedback += " Email ";
+				}
+				if(incontact.message.length === 0)
+				{
+					formfeedback += " Swim Club";
+				}
+					$("#formfeedback").html(formfeedback);
+				
+			}
+
+		break;
+				
+		case "touchpadmode":
+		// show the touchpad status as on or OFF
+				currenttpstatus = $("#touchpadmode").attr("title");
+				if(currenttpstatus == 'on') {
+					$("#touchpadstatus").text('On');
+					$("#touchpadmode").attr("title", "off");
+				}
+				else
+				{
+					$("#touchpadstatus").text('Off');
+					$("#touchpadmode").attr("title", "on");
+				}
+				
+		break;	
+
+		case "twitterin":
+			window.open(cloudurl + "/auth/twitter2", "_self");
+
+		break;
+
+		case "facebookin":
+			window.open(cloudurl  + "/auth/facebook2", "_self");	
+		break;
+
+		case "twitterout":
+			
+			window.open(homeurl, "_self");
+
+		break;
+				
+	} // closes switch		
 			
  }; // closes id function
 
@@ -1044,42 +992,43 @@ MasterWatch.prototype.startStop = function() {
 * @method recordmanagement
 */
 MasterWatch.prototype.recordmanagement = function() { 
-				// need to keep a counter of element order start if with one
-		var norepetitionsobject = $('#swimrepetition.recordlive');	
-		
-		var totalelementrec = $(".liveswimelement").length -1;
-		// add one to recordcounter
-		var newcounter = parseInt($(".recordcount").text());
-		nextcount = newcounter + 1;
+console.log('record management being called');
+	// need to keep a counter of element order start if with one
+	var norepetitionsobject = $('#swimrepetition.recordlive');	
+	
+	var totalelementrec = $(".liveswimelement").length -1;
+	// add one to recordcounter
+	var newcounter = parseInt($(".recordcount").text());
+	nextcount = newcounter + 1;
 
-		norepetitionsobject = $('#swimrepetition.recordlive');		
-		var norepetitions =norepetitionsobject[elementliverecid].innerHTML;
-		
-		if(nextcount > norepetitions)
-		{	
-			// check if more record element or time to finish recording
-			if(elementliverecid == totalelementrec)
-			{
-			$(".recordfeedback").text('Finished recording');
-				// need to reset / clear record variables
-				elementliverecid = 0;
+	norepetitionsobject = $('#swimrepetition.recordlive');		
+	var norepetitions =norepetitionsobject[elementliverecid].innerHTML;
+	
+	if(nextcount > norepetitions)
+	{	
+		// check if more record element or time to finish recording
+		if(elementliverecid == totalelementrec)
+		{
+		$(".recordfeedback").text('Finished recording');
+			// need to reset / clear record variables
+			elementliverecid = 0;
 
-			}
-			else
-			{
-				elementliverecid++;
-				//remove record live from current element and add it to the next
-				$('.recordcount').remove();
-				// add it to the next item				
-				$('#' + norepetitionsobject[elementliverecid].parentNode.id).append('<div class="recordcount" >1</div>');		
-			}
 		}
 		else
 		{
-			$(".recordcount").text(nextcount);
+			elementliverecid++;
+			//remove record live from current element and add it to the next
+			$('.recordcount').remove();
+			// add it to the next item				
+			$('#' + norepetitionsobject[elementliverecid].parentNode.id).append('<div class="recordcount" >1</div>');		
 		}
+	}
+	else
+	{
+		$(".recordcount").text(nextcount);
+	}
 		
-	};
+};
 
 /**
 *  Master record management back one set element

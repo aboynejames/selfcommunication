@@ -30,7 +30,7 @@ var llLogic = function(localDB, localHTML) {
 */	
 llLogic.prototype.frameworklogic = function(intentionin) {
 	idclick = $(intentionin).attr("id");
-	
+
 	switch(idclick){
 
 	case "me": 
@@ -178,7 +178,53 @@ llLogic.prototype.frameworklogic = function(intentionin) {
 			$("#poolcontext").css('background', 'white');		
 			$("#poolcontext").data("poolstatus", "on");
 		}
-	break;		
+	break;
+
+	case "analysiscontext":
+
+		$("#analysistype").show();
+		var analysisstatus = $("#analysiscontext").data("analysisstatus");
+		if(analysisstatus == 'on') {
+			// need to make live all the edit / analysis feature options
+			$(".peredit").hide();
+			$(".peranalysis").show();
+			$(".peranalysis").show();
+			$("#perrealtime").show();
+			$(".historicalplace").show();
+			$("#analysiscontext").data("analysisstatus", "off");
+			$("#startsort").attr("title", "on");
+			$(".ui-state-default").css("width", "100%");
+			//$("#analysiscontext").attr('class', 'control-textpressed');
+			$("#startsort").attr('class', 'control-text');
+		}
+		else
+		{
+			$(".peredit").hide();
+			$(".peranalysis").hide();
+			$(".analysislabel").hide();
+			$(".historicalplace").hide();
+			$(".historicalchart").hide();						
+			$(".historicalsummary").hide();
+			$(".historicalbio").hide();
+			$("#viewdatalive").empty();
+			$("#visualisedata").empty();
+			$(".splitviewrep").remove();
+			$(".splitview").remove();
+			$(".splitviewcompare").remove();
+		
+			$("#analysiscontext").data("analysisstatus", "on");
+			$("[class^='peranalysisid']").attr("data-statusanalysis", "on");
+			$("[class^='peranalysisid']").css("color", "#1c94c4");
+			$("[class^='pereditidremove']").attr("data-statusanalysis", "on");
+			$("[class^='perchartid']").attr("data-statusanalysis", "on");
+			$("[class^='perchartid']").css("color", "#1c94c4");
+			$("[class^='persummaryid']").attr("data-statusanalysis", "on");
+			$("[class^='persummaryid']").css("color", "#1c94c4");
+			$("[class^='perbioid']").attr("data-statusanalysis", "on");
+			$("[class^='perbioid']").css("color", "#1c94c4");
+			//$("#analysiscontext").attr('class', 'control-text');
+		}
+	break;	
 		
 	case "skipelement":
 		starttiming.activetimeclock.startclock.recordmanagement();
@@ -256,7 +302,7 @@ llLogic.prototype.settrainingData = function() {
 *
 */	
 llLogic.prototype.setwelcomeMessage = function() {
-console.log('wekcine start message');
+
 	// welcome summary  call pouch get no. active swimmers
 	function welcomeDatacall(callback) {  
 		livepouch.mapQueryswimmers(callback);
@@ -265,20 +311,20 @@ console.log('wekcine start message');
 	welcomeDatacall(function(wmap) { 
 		if(wmap.rows.length > 0)
 		{
-console.log('swimmers');			
+		
 			welcomedata = wmap.rows.length + " active swimmers";
 			$("#welcomesummary").html(welcomedata);
 			$("#sortable1").show();
 			presentswimmer = '';
 
 			wmap.rows.forEach(function(rowswimrs){
-console.log('being call start swimmer list');				
+				
 				//pass the lane data to get html ready
 				presentswimmer += liveHTML.fromswimmers(rowswimrs.value[1], rowswimrs.value[0]);
 				liveLogic.setNameID(rowswimrs.value[1], rowswimrs.value[0]);
 				liveLogic.setEmailID(rowswimrs.value[2], rowswimrs.value[0]);
 			});
-console.log(presentswimmer);			
+			
 			$("#sortable1").html(presentswimmer);	
 			$("#sortable1").show();
 			
@@ -292,8 +338,7 @@ console.log(presentswimmer);
 		$("#viewdata").attr("title", "on");
 		}
 		else
-		{
-console.log('no swimmer at start');			
+		{		
 			welcomedata = 'No swimmmers present.<br /><br />Please press <b>Swimmers</b> button';
 			$("#welcomesummary").html(welcomedata);
 			

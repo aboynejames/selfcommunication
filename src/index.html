@@ -54,6 +54,10 @@
 		<li>
 			<a href="" id="poolcontext" data-poolstatus="on" >Pool</a>
 		</li>
+		<li>
+			<a href="" id="analysiscontext" data-analysisstatus="on" >Analysis</a>
+		</li>
+		<!--<a class="control-text"  href="/viewsplits" id="viewdata" title="on" >Analysis</a>-->
 	</nav>
 
 			<section id="context">
@@ -68,68 +72,14 @@
 			
 </section> <!-- close attention settings -->
 <section class="social">
-		Swimmers
-				<div class="demo">
-				<h2>
-				<!--<a class="control-text" href="#" id="loadlane" title="on" >Swimmers</a>--><span id="loadlanediv" ></span>
-				</h2> 
-			</div> <!-- closes demo class -->
-<!--<input type="text" id="postOrder" name="postOrder" value="" size="30"><br /></div>-->
-
-				<div id="controloptions">
-				<ul class="controlspanel">
-					<li>
-						<div id="loadlaneselect" >
-						<label>By group:</label>
-						<select id="thelaneoptions" class="selectswimmer" >'
-							<option value="-1" selected >-</option>
-							<option value="1">1</option>
-							<option value="2">2</option>
-							<option value="3">3</option>
-							<option value="4">4</option>
-							<option value="5">5</option>
-							<option value="6">6</option>
-							<option value="7">7</option>
-							<option value="8">8</option>
-							<option value="9">9</option>
-							<option value="10">10</option>
-						</select>
-					</div>
-				</li>
-				<li>	
-					<div id="loadswimmers">
-						<label>By name</label>
-						<select id="theswimmeroptions" class="selectswimmer">
-							<option value="-1" selected >-</option>
-							<option value="a">A</option>
-							<option value="b">B</option>
-							<option value="c">C</option>
-							<option value="d">D</option>
-							<option value="e">E</option>
-							<option value="f">F</option>
-							<option value="g">G</option>
-							<option value="h">H</option>
-							<option value="i">I</option>
-							<option value="j">J</option>
-							<option value="k">K</option>
-							<option value="l">L</option>
-							<option value="m">M</option>
-							<option value="n">N</option>
-							<option value="o">O</option>
-							<option value="p">P</option>
-							<option value="q">Q</option>
-							<option value="r">R</option>
-							<option value="s">S</option>
-							<option value="t">T</option>
-							<option value="u">U</option>
-							<option value="v">V</option>
-							<option value="w">W</option>
-							<option value="x">X</option>
-							<option value="y">Y</option>
-							<option value="z">Z</option>
-						</select>
-				</div>
-			</li>
+	Click swimmers name to make active in stopwatch
+		<div class="demo">
+		<h2>
+		<!--<a class="control-text" href="#" id="loadlane" title="on" >Swimmers</a>--><span id="loadlanediv" ></span>
+		</h2> 
+	</div> <!-- closes demo class -->
+		<div id="controloptions">
+		<ul class="controlspanel">
 			<li>
 				<div id="addnewswimmer" >
 					<label>-</label><a href="" id="addswimmer" class="control-text" title="on" >New</a>
@@ -141,22 +91,71 @@
 				<div id="loadclearswimmers" >
 					<label>-</label><a href="" id="clearallswimmers" class="control-text" >Clear</a>
 				</div>
+			</li>		
+			<li>
+				<div id="loadlaneselect" >
+				<label>By group:</label>
+				<select id="thelaneoptions" class="selectswimmer" >'
+					<option value="-1" selected >-</option>
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+					<option value="10">10</option>
+				</select>
+				</div>
+			</li>
+			<li>	
+				<div id="loadswimmers">
+					<label>By name</label>
+					<select id="theswimmeroptions" class="selectswimmer">
+						<option value="-1" selected >-</option>
+						<option value="a">A</option>
+						<option value="b">B</option>
+						<option value="c">C</option>
+						<option value="d">D</option>
+						<option value="e">E</option>
+						<option value="f">F</option>
+						<option value="g">G</option>
+						<option value="h">H</option>
+						<option value="i">I</option>
+						<option value="j">J</option>
+						<option value="k">K</option>
+						<option value="l">L</option>
+						<option value="m">M</option>
+						<option value="n">N</option>
+						<option value="o">O</option>
+						<option value="p">P</option>
+						<option value="q">Q</option>
+						<option value="r">R</option>
+						<option value="s">S</option>
+						<option value="t">T</option>
+						<option value="u">U</option>
+						<option value="v">V</option>
+						<option value="w">W</option>
+						<option value="x">X</option>
+						<option value="y">Y</option>
+						<option value="z">Z</option>
+					</select>
+				</div>
 			</li>
 		</ul>
-			<div style="clear:both;"></div>
+		<div style="clear:both;"></div>
 
 		<div id="addalpha"></div>
 		<div id="addalphatwo"></div>
 	</div>   <!--closes control panel div-->
 			
 	<div id="changeplace"></div>
-	
 	<br />
-
-	</section>
+</section>
 
 	<section class="tools">
-		<a class="control-text"  href="/viewsplits" id="viewdata" title="on" >Analysis</a>
 		<a class="control-text" href="#"  id="startsort" title="on" >Edit order</a>
 		<a class="control-text" href="#"  id="startremove" title="on" >Remove</a>
 	</section>
@@ -267,12 +266,12 @@
 		</div>
 		<div class="swimsettingslabel">
 			<label>Stroke:</label><select id="swimstroke" class="rightselect" >
-		<option value="Freestyle">Freestyle</option>
-		<option value="Backstroke">Backstroke</option>
-		<option value="Breaststroke">Breaststroke</option>
-		<option value="Butterfly">Butterfly</option>
-		<option value="im">im</option>
-		</select>
+			<option value="Freestyle">Freestyle</option>
+			<option value="Backstroke">Backstroke</option>
+			<option value="Breaststroke">Breaststroke</option>
+			<option value="Butterfly">Butterfly</option>
+			<option value="im">im</option>
+			</select>
 		</div>
 		<div class="swimsettingslabel">
 		<label>Technique:</label><select id="swimtechnique" class="rightselect" >
@@ -367,7 +366,6 @@
 				</ul>
 			</nav>
 		</header>
-	</div>
 	
 	<header id="connect-header"><b>Connectivity:</b> Local PI <span id="localpi">Not Connected</span> </header>
 <header id="swimadmin">
@@ -378,7 +376,7 @@
 					<nav>
 						<ul>
 							<li>
-							 <a href="" id="dshare" data-dshare-status="on" ><img id="image-dshare" src="images/dshare-small.png" ></a> Social-share  
+							 <a href="" id="dshare" data-dshare-status="on" ><img id="image-dshare" src="images/dshare-small.png" /></a> Social-share  
 							</li>
 						</ul>
 					</nav>
@@ -392,7 +390,7 @@
 				<div id="dshare-api-add">
 					Comming soon: Dsensor Decentralized Sensor Mapping Protocol.
 				</div>
-	</section>
+</section>
 	
 	<footer id="footer" class="body">
 		<p>2014-v0.1.80 <a href="">Communication - open sport project</a></p>

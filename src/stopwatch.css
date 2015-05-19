@@ -213,12 +213,13 @@ body {margin:0; padding:0; font:12px/18px Helvetica, Arial, sans-serif;}
 }
 
 .controlspanel li {
+	display:inline-block;
 	padding-top:0.4em;
-	width:70%;
+	width:60%;
 	margin-left:20px;
 	font-size: 1em;
 	list-style-type:none;
-	border: 0px solid green;
+	border: 1px solid green;
 }
 
 .load-text {
@@ -232,7 +233,7 @@ body {margin:0; padding:0; font:12px/18px Helvetica, Arial, sans-serif;}
 
 #addnewswimmer {
 	display:block;
-	width:100%;
+	width:80%;
 	min-height:60px;
 	padding-top:25px;
 	border:1px solid pink;
