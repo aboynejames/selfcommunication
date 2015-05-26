@@ -26,7 +26,11 @@ $(document).ready(function(){
 	$("#dshare-api").hide();
 	$("#dshare-api-add").hide();
 	$(".pool").hide();
-		
+	$("#syncdata").hide();
+	$("#email-data-id").hide();
+	$("#clearpouchdb").hide();
+	$(".inmenu-text").hide();
+	
 	
 	// create pouchdb object
 	livepouch = new pouchdbSettings();
@@ -72,7 +76,9 @@ $(document).ready(function(){
 		//$("#facebookin").text('Sign-out');
 		//$("#facebookin").attr('id', 'facebookout');
 		$("#syncdata").show();
+		$("#email-data-id").show();
 		$("#clearpouchdb").show();
+		$(".inmenu-text").show();
 		
 	}
 	
@@ -128,20 +134,17 @@ console.log(idclick);
 		{
 			// pass on the id of the swimmer  2 pass on the type of click,  start, reset, split, stop	
 			starttiming.identifyswimmer(idtitle, idclick);
-			
 			// make programme logic
 			liveMake.makeLogic(idclick, $sotgt);
-
 			// record DS data
-			liveRecord.recordLogic(idclick, $sotgt);						
-			
+			liveRecord.recordLogic(idclick, $sotgt);									
 		}
 		else
 		{
-		/*
-		*  Dapp connectiviity control
-		*
-		*/
+			/*
+			*  Dapp connectiviity control
+			*
+			*/
 			switch(idclick){
 				
 							
@@ -153,18 +156,15 @@ console.log(idclick);
 					{
 						$("#dshare-api").show();
 						$("#dshare").data("dshare-status", "off");
-
 					}
 					else
 					{
 						$("#dshare-api").hide();
 						$("#dshare").data("dshare-status", "on");
-		
 					}	
 		
 				break;
 
-			
 			}
 
 		}
@@ -274,8 +274,6 @@ console.log(idclick);
 				else
 				{
 					// get list of name id email
-					
-					
 				}
 				
 				clouddatalist = {};
@@ -331,15 +329,17 @@ console.log(peernetworknotified);
 			}
 			else if (trainlog.results[0].doc.name)
 			{
-console.log('post call to save data');				
+console.log('post call to save identity email status');				
 console.log(trainlog.results);				
 				// send all the id back to the cloud and from there if multi ID will be contacted via emailemailemail
 				trainlog.results.forEach(function(rowsswimsplit){
 					// form JSON to sync back to couch
 					buildsid = {};
 					buildsid.idlocal = rowsswimsplit.doc.swimmerid;
+					buildsid.username = rowsswimsplit.doc.name;	
 					buildsid.email =rowsswimsplit.doc.emailid;
-					buildsid.idcouch = rowsswimsplit.doc._id;	
+					buildsid.emailstatus =rowsswimsplit.doc.emailstatus;  // set to 1,  risk does not save  need to set local email status to 1	
+					buildsid.idpouch = rowsswimsplit.doc._id;	
 					// save data locally and back to cloud
 					liveRecord.swimdataCloud(buildsid);
 				});
@@ -349,9 +349,27 @@ console.log(trainlog.results);
 
 		});
 	});
-
+	
+	/**
+	*
+	* email out ID and data access tokens
+	*
+	*/
+	$("#email-data-id").click(function (e) {
+		
+		// use Dshare API to connect to PtoP messaging network TODO
+		
+		
+		// make call to cloud, if email / data to notify, send command to send email
+		var emailcheck = 'checkemail';
+		liveRecord.checkdataCloud(emailcheck);	
+		
+		
+		
+	});
+	
 	/*
-	* add swimmer form produced after default layout therefore need to delegate to existing DOM element	
+	* add new swimmer details, name, email adress squad
 	*/	
 	$("#newmaster").click(function (e) {
 				
@@ -393,7 +411,8 @@ console.log(trainlog.results);
 					firstsavenewmaster.name = newmastnameis;
 					firstsavenewmaster.swimmerid = newmastidis;
 					firstsavenewmaster.emailid = newemailis;
-					firstsavenewmaster.lanetrain = newlane;		
+					firstsavenewmaster.lanetrain = newlane;	
+					firstsavenewmaster.emailstatus = 0;							
 					jsonfirstsavenewmaster =  JSON.stringify(firstsavenewmaster);
 					//  make save to poudbfirst
 					livepouch.singleSave(firstsavenewmaster);	
@@ -405,14 +424,6 @@ console.log(trainlog.results);
 					liveLogic.setNameID(newmastnameis, newmastidis);
 					liveLogic.setNameID(newemailis, newmastidis);	
 					
-					// send email with ID
-					// check if sigined in online if not, keep record locally and then send mail when next online.
-					buildsid = {};
-					buildsid.idlocalnew = newmastidis;
-					buildsid.email = newmastnameis;
-					// save data locally and back to cloud
-					liveRecord.swimdataCloud(buildsid);
-								
 					$("#sortable1").append(newswimcode);
 					$("#saveconfirmswimmer").text('new master added');
 					$("#saveconfirmswimmer").show();
@@ -851,7 +862,9 @@ success: function( resultback ){
 		$("#loadswimmers").hide();
 		$("#addnewswimmer").hide();
 		$("#syncdata").hide();
+		$("#email-data-id").hide();
 		$("#clearpouchdb").hide();
+		$(".inmenu-text").hide();
 		$("#sortable1").empty();
 		$("#signinopener").show();
 

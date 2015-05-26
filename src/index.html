@@ -94,7 +94,7 @@
 			</li>		
 			<li>
 				<div id="loadlaneselect" >
-				<label>By group:</label>
+				<label>By squad:</label>
 				<select id="thelaneoptions" class="selectswimmer" >'
 					<option value="-1" selected >-</option>
 					<option value="1">1</option>
@@ -340,33 +340,37 @@
 </div>
 </section>
 
+<section id="controlpanel">
+	<header class="onlinemode">Settings</header>
+	<nav>
+		<ul>Sign-in
+			<li>
+				<a id="localin" href="#" class="control-text">Local</a>
+				<a id="twitterin" href="/twitterin" title="/twitterin" class="control-text">Twitter</a>
+				<a id="facebookin" href="/facebookin" title="/facebookin" class="control-text">Facebook</a>
+				<!--<a id="signinopener" href="/signin" title="signin" class="control-text">Sign-in to store data</a>-->
+				<div id="ifsignedin"></div>
+				<div id="siginformarea" style="display: none;">
+				<div>Welcome, to Train Timer </div>
+					<form id="siginform" action="#" method="post">
+					<div><label for="name">Username</label><input type="text" size="16" title="name" class="text ui-widget-content ui-corner-all" id="name"></div>
+					<div><label for="password">Password</label><input type="password" size="16" title="password" value="" class="text ui-widget-content ui-corner-all" id="password"></div>
+					</form>
+				<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix"> <div class="ui-dialog-buttonset"><button aria-disabled="false" role="button" type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"><span class="ui-button-text">Sign me in</span></button></div></div><div id="responsemessage"></div>
+				</div>
+			</li>
+		</ul>	
+		<ul>
+			<li class="inmenu-text"><a id="syncdata" href="#" style="display: none;">Sync data</a></li>
+			<li class="inmenu-text"><a id="email-data-id" href="#" style="display: none;">Email IDs</a></li>
+			<li class="inmenu-text"><a id="clearpouchdb" href="#"  style="display: none;">Clear all data</a></li>
+			<li class="inmenu-text-feedback"><span id="syncbackup"></span><span id="email-message"></span></li>
+		</ul>
+	</nav>
+
+</section>
+
 <section id="connectivity">
-	<header class="onlinemode">
-		<nav>
-			<ul>
-				<li></li>
-				<li>
-					<a id="twitterin" href="/twitterin" title="/twitterin" class="control-text">Twitter Sign-in</a>
-					<a id="facebookin" href="/facebookin" title="/facebookin" class="control-text">Facebook Sign-in</a>
-					<!--<a id="signinopener" href="/signin" title="signin" class="control-text">Sign-in to store data</a>-->
-			<div id="ifsignedin"></div>
-			<div id="siginformarea" style="display: none;">
-			<div>Welcome, to Train Timer </div>
-			<form id="siginform" action="#" method="post">
-			<div><label for="name">Username</label><input type="text" size="16" title="name" class="text ui-widget-content ui-corner-all" id="name"></div>
-			<div><label for="password">Password</label><input type="password" size="16" title="password" value="" class="text ui-widget-content ui-corner-all" id="password"></div>
-			</form>
-			<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix"> <div class="ui-dialog-buttonset"><button aria-disabled="false" role="button" type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"><span class="ui-button-text">Sign me in</span></button></div></div><div id="responsemessage"></div>
-			</div>
-				</li>
-				</ul>	
-				<ul>
-					<li class="inmenu-text"><a id="syncdata" href="/sync" title="syncdata" style="display: none;">Sync &amp; Clear data</a><span id="syncbackup"></span></li>
-					<li class="inmenu-text"><a id="clearpouchdb" href="#" title="clearpouchdb" style="display: none;">Clear Local Database</a></li>
-				</ul>
-			</nav>
-		</header>
-	
 	<header id="connect-header"><b>Connectivity:</b> Local PI <span id="localpi">Not Connected</span> </header>
 <header id="swimadmin">
 		<b>Sensors:</b> <a title="on" id="touchpadmode" href="" class="sensor-text">WIFI TouchPad</a><span id="wifitouchpadin">Not Connected</span> <a title="on" id="videomode" href="" class="sensor-text">Video</a><span id="localvideo">Not Connected</span>
@@ -393,7 +397,7 @@
 </section>
 	
 	<footer id="footer" class="body">
-		<p>2014-v0.1.80 <a href="">Communication - open sport project</a></p>
+		<p>2015-v0.1.80 <a href="">Communication - open sport project</a></p>
 	</footer>	
 	
 </body>

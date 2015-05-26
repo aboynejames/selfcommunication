@@ -472,37 +472,6 @@ input:required {
 	
 }
 
-/*
-* SignIn formatting
-*/
-.onlinemode {
-	font-size: 1.0em;
-	
-}
-
-.onlinemode ul {
-    width:100%;
-    list-style-type:none;
-    list-style-position:outside;
-    margin:0px;
-    padding:0px;
-}
-
-.onlinemode li{
-    padding:18px;
-    border-bottom:1px solid #eee;
-    position:relative;
-}
-
-
-label {
-	float: left;
-	padding-top:0.4em;
-	width:86px;
-	margin-right:6px;
-	vertical-align: bottom;
-	font: bold;
-}
 
 
 
@@ -967,7 +936,7 @@ button.submit:active {
 	
 	.inmenu-text {
 	
-	font-size: 1.4em;
+	font-size: 1em;
 	padding-top: 20px;
 	margin-top: 20px;
 

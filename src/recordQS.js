@@ -150,38 +150,86 @@ recordQS.prototype.swimdataCloud = function(cloudsave) {
 			dataType: "text",
 			data: cloudready,
 						
-						success: function( saveback ){
-						
-							// pass on markup and add data to live data model
-							var serverdatain = JSON.parse(saveback);
-	
-							// does this individual have data?  If not provide links enter data or sportsBOX
-							if(serverdatain.save ==  "emailIDpassed")
-							{
-								$("#syncbackup").html('finished');	
-								// only delete local data entries, not ID information
-console.log('delete local record after cloud');									
-								livepouch.deleteDoc(cloudsave.idcouch);
-								
-							}
-							else
-							{
-								
-							}
-						},
-						error: function( error ){
-					// Log any error.
+			success: function(saveback){
+			
+				// pass on markup and add data to live data model
+				var serverdatain = JSON.parse(saveback);
+				// does this individual have data?  If not provide links enter data or sportsBOX
+				if(serverdatain.save ==  "emailIDpassed")
+				{
+					$("#syncbackup").html('finished');	
+					
+				}
+				else
+				{
+					
+				}
+			},
+			error: function( error ){
+		// Log any error.
 //console.log( "ERROR:", error );
-							if(error.status == 404)
-							{
-								$("#syncbackup").html('Access to cloud not available, please logout and signin again.');	
-								
-							}
-							
-						},
-						complete: function(){
+				if(error.status == 404)
+				{
+					$("#syncbackup").html('Access to cloud not available, please logout and signin again.');	
+					
+				}
+				
+			},
+			complete: function(){
 
-						}
-			});
+			}
+		});
+			
+};
+
+/**
+* check if email id or  data notification to be sent
+* @method checkdataCloud		
+*
+*/	
+recordQS.prototype.checkdataCloud = function(cloudcheck) {
+
+	var cloudready = JSON.stringify(cloudcheck);
+	var formdataurl = cloudurl+ '/checkdata/' + liveLogic.idname + '/token/' + liveLogic.tokenid;
+	// Make the PUT request.
+	$.ajax({
+		type: "POST",
+		url: formdataurl,
+		contentType: "application/json",
+		dataType: "text",
+		data: cloudready,
+					
+		success: function(databack){
+		
+			// pass on markup and add data to live data model
+			var serverdatain = JSON.parse(databack);
+console.log(serverdatain.check);
+			// does this individual have data?  If not provide links enter data or sportsBOX
+			if(serverdatain.check ==  "newemailids")
+			{
+				$("#syncbackup").html('email notifications was successful');	
+				// only delete local data entries, not ID infor
+				
+			}
+			else
+			{
+				$("#syncbackup").html('There is no data to share, please press Sync');	
+												
+			}
+		},
+		error: function( error ){
+	// Log any error.
+//console.log( "ERROR:", error );
+			if(error.status == 404)
+			{
+				$("#syncbackup").html('Access to cloud not available, please logout and signin again.');	
+				
+			}
+			
+		},
+		complete: function(){
+
+		}
+	});
 			
 };
