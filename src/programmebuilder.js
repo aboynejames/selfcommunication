@@ -288,7 +288,7 @@ console.log(idclick);
 						buildsyncsplits = {};
 						buildsyncsplits.session = rowsswimsplit.doc.session;
 						buildsyncsplits.swimmerid = rowsswimsplit.doc.swimmerid;
-						buildsyncsplits.email = 1212;		
+						buildsyncsplits.emailstatus = 'newdata';		
 					
 						//keep track of id of data being sent.
 						clouddatalist[rowsswimsplit.doc.swimmerid] = 1;

@@ -261,19 +261,57 @@ pouchdbSettings.prototype.filterchangeLog = function(callbackin, filterin) {
 };
 
 /**
-* copy pouchdb locally or to couchdb?
+* copy pouchdb locally to another pouch
 * @method replicate		
 *
 */	
-pouchdbSettings.prototype.replicate = function() {
+pouchdbSettings.prototype.replicatelocal = function() {
 
-PouchDB.replicate(this.account.pouchdbname, 'traintimercloud', {
-  onChange: onChange,
-  complete: onComplete
-});
-	
+	this.livepouch.replicate.to('localbackup').on('complete', function () {
+ console.log(' yay, we re done!');
+		
+	}).on('error', function (err) {
+		
+console.log('boo, something went wrong!');
+	});
 
 };
+
+/**
+* copy pouchdb locally a couchdb
+* @method replicatecouchdb		
+*
+*/	
+pouchdbSettings.prototype.replicatecouchdb = function() {
+
+	this.livepouch.replicate.to('http://localhost:5984/pouchdbreplicate').on('complete', function () {
+ console.log(' yay, we re done!');
+		
+	}).on('error', function (err) {
+		
+console.log('boo, something went wrong!');
+console.log(err);		
+	});	
+
+};
+
+/**
+*  continusous sync  pouchdb locally a couchdb
+* @method synccouchdb		
+*
+*/	
+pouchdbSettings.prototype.synccouchdb = function() {
+console.log('start of syncing with couchdb');
+console.log(this.account.pouchdbname);
+	this.livepouch.sync('selfenginelocal', 'http://www.mepath.co.uk:5984/pouchdbreplicate').on('change', function (info) {
+  // handle change
+consol.log('sync changes');		
+console.log(info);		
+	});
+
+};
+
+
 
 /**
 * Delete a whole database 
@@ -281,8 +319,9 @@ PouchDB.replicate(this.account.pouchdbname, 'traintimercloud', {
 *
 */	
 pouchdbSettings.prototype.deletePouch = function() {
-
-	PouchDB.destroy(this.account.pouchdbname, function(err, info) { });
+console.log('delete whole pouchdb');
+console.log(this.livepouch);	
+	this.livepouch.destroy(this.account.pouchdbname, function(err, info) { });
 
 
 };
