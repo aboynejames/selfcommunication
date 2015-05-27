@@ -45,6 +45,7 @@ $(document).ready(function(){
 	liveRecord = new recordQS();
 	liveHTML = new ttHTML();
 	llliveListen = new llListener(starttiming);
+	liveSync = new synccloud();
 	
 	elementliverecid = 0;
 	uniqueelementids = [];
@@ -54,6 +55,24 @@ $(document).ready(function(){
 	var month = today.getUTCMonth() + 1;
 	var day = today.getUTCDate();
 	var year = today.getUTCFullYear();
+	// FIRST time / default pouchdb 
+	liveSync.checkDatafilters();
+	
+	function checkSyncdateStatus(callback) {  
+		livepouch.getDoc(callback, "syncdate");
+	}  
+
+	checkSyncdateStatus( function(startdatelog) {
+		
+		if(!startdatelog)
+		{	
+			// set defaults start date to 0
+			livepouch.putStartSingleDoc(100);
+		}
+		
+	});
+	
+	
 	
 	// connect to socket.io
 	cloudurl = 'http://localhost:8881';
@@ -218,136 +237,35 @@ console.log(idclick);
 	});
 	
 	/*
-	* Sync data back to couchdb online
+	* Sync data back to couchdb online via POST api calls
 	*
 	*/
 	$("#syncdata").click(function(e) {
+
+		var datelastsync = 0;
+		// need to retrieve last sync date
+		function lastSyncdate(callback) {  
+			livepouch.getDoc(callback, 'syncdate');
+		}  		
+		
+		lastSyncdate(function(datelog) {
 	
-		function checkdesigndocStatus(callback) {  
-			livepouch.getDoc(callback, "_design/swimmers");
-		}  
-
-		checkdesigndocStatus( function(deisgnlog) {
-			
-			if(!deisgnlog)
+			if(datelog  === undefined)
 			{
-				designdocjson = {"_id": "_design/swimmers",  "filters" : {"nameslist" : "function(doc) { return doc.name}"}};
-				livepouch.putDoc(designdocjson);
-				
-				// for session training data
-				designdocjson = {"_id": "_design/session",  "filters" : {"sessionlist" : "function(doc) { return doc.session}"}};
-				livepouch.putDoc(designdocjson);
-							
-				// for commuication training set authored
-				designdocjson = {"_id": "_design/communication",  "filters" : {"commlist" : "function(doc) { return doc.communication}"}};
-				livepouch.putDoc(designdocjson);				
-			
+				datelastsync = 100;
+				liveSync.dataPushcloud(datelastsync);
 			}
-			else if (deisgnlog.filters)
+			else
 			{
+				datelastsync = datelog.lastsync;
+				liveSync.dataPushcloud(datelastsync);
 
-			}	
+			}
 				
 		});
-		
-		// get all current doc from pouchdb and pass them on to nodejs to couchdb/SAFEnetwork Dapp and delete local pouch data (ideally leave 1 month or user directed future todo )
-		var syncmessage = '<a  href=""><img  id="syncicon" alt="sync in progress" src="images/sync.png" ></a>';
-		localsplitstodelete = [];
-		
-		function localDatalog(callback) {  
-			livepouch.changeLog();
-			livepouch.filterchangeLog(callback, 'swimmers/nameslist');
-			livepouch.filterchangeLog(callback, 'session/sessionlist');
-			livepouch.filterchangeLog(callback, 'communication/commlist');			
-		};
-
-		localDatalog( function(trainlog) {
-			// need to differenciate between the type
-			if(trainlog.results[0].doc.session)
-			{
-				// get id email details to pass to decentralised or cloud
-				if(liveLogic.nameholder.length > 0 && liveLogic.emailholder.length > 0)
-				{
-					// all the id and email address are available				
-				
-				}
-				else
-				{
-					// get list of name id email
-				}
-				
-				clouddatalist = {};
-				peernetworknotified = {};
-				// save the training data and delete ready for next batch of data
-				$("#syncbackup").html(syncmessage);				
-				trainlog.results.forEach(function(rowsswimsplit){
-
-					if (rowsswimsplit.doc.session)
-					{
-						// form JSON to sync back to couch
-						buildsyncsplits = {};
-						buildsyncsplits.session = rowsswimsplit.doc.session;
-						buildsyncsplits.swimmerid = rowsswimsplit.doc.swimmerid;
-						buildsyncsplits.emailstatus = 'newdata';		
-					
-						//keep track of id of data being sent.
-						clouddatalist[rowsswimsplit.doc.swimmerid] = 1;
-					
-						// save data locally and back to cloud
-						liveRecord.swimdataCloud(buildsyncsplits);	
-						
-					}
-				});
-
-				var liveidlist = Object.keys(clouddatalist);
-				
-				if(liveidlist.length > 0)
-				{
-					var clouddatestart = new Date();
-					var clouddate = Date.parse(clouddatestart);
-					// need to check list of live id via all potential ids
-					var liveidlist = Object.keys(clouddatalist);
-					liveidlist.forEach(function(lslid){ 
-						
-						peernetworkin ={};		
-						peernetworkin.name = liveLogic.nameholder[lslid];
-						peernetworkin.email = liveLogic.emailholder[lslid];
-						peernetworkin.cdate = clouddate;
-						peernetworknotified.peernetwork = "savenetwork";	
-						peernetworknotified.email = 1212;	
-						peernetworknotified[lslid] = peernetworkin;
-					});
-console.log(peernetworknotified);
-						liveRecord.swimdataCloud(peernetworknotified);							
-				}
-				
-			}
-			else if(trainlog.results[0].doc.commdate)
-			{
-				// save the training test authored and keep a local copy			
-				
-			}
-			else if (trainlog.results[0].doc.name)
-			{
-console.log('post call to save identity email status');				
-console.log(trainlog.results);				
-				// send all the id back to the cloud and from there if multi ID will be contacted via emailemailemail
-				trainlog.results.forEach(function(rowsswimsplit){
-					// form JSON to sync back to couch
-					buildsid = {};
-					buildsid.idlocal = rowsswimsplit.doc.swimmerid;
-					buildsid.username = rowsswimsplit.doc.name;	
-					buildsid.email =rowsswimsplit.doc.emailid;
-					buildsid.emailstatus =rowsswimsplit.doc.emailstatus;  // set to 1,  risk does not save  need to set local email status to 1	
-					buildsid.idpouch = rowsswimsplit.doc._id;	
-					// save data locally and back to cloud
-					liveRecord.swimdataCloud(buildsid);
-				});
-			}
-		//  TODO should get a cloud update of average, summary statistics and save/update locally
-			
-
-		});
+		// set date if sync
+		var dataAtsync = new Date().valueOf();		
+		livepouch.putSingleDoc(dataAtsync);	
 	});
 	
 	/**
@@ -412,7 +330,8 @@ console.log(trainlog.results);
 					firstsavenewmaster.swimmerid = newmastidis;
 					firstsavenewmaster.emailid = newemailis;
 					firstsavenewmaster.lanetrain = newlane;	
-					firstsavenewmaster.emailstatus = 0;							
+					firstsavenewmaster.emailstatus = 0;
+					firstsavenewmaster.startdate = newswimmerguid;	
 					jsonfirstsavenewmaster =  JSON.stringify(firstsavenewmaster);
 					//  make save to poudbfirst
 					livepouch.singleSave(firstsavenewmaster);	
@@ -510,17 +429,7 @@ console.log(trainlog.results);
 		$("#analysistype").hide();
 		$("#viewdata").attr("title", "on");
 		$("#loadlane").attr('class', 'control-text');
-				
-		// test splits data recall						
-		/*function localDataSPcall(dataspin, callback) {  
-			livepouch.mapQuerySplits(dataspin, callback);
-
-		}  
-
-			localDataSPcall('1', function(spmap) {  
-
-			});						
-		*/		
+		
 	});  
 					
 		$("#controloptions").hide();
@@ -537,7 +446,7 @@ console.log(trainlog.results);
 		if ($swtgt.is("a")) {
 			idclick = $swtgt.attr("id");
 			idname =$swtgt.attr("title");
-// pass on the id of the swimmer  2 pass on the type of click,  start, reset, split, stop	
+			// pass on the id of the swimmer  2 pass on the type of click,  start, reset, split, stop	
 			starttiming.identifyswimmer(idname, idclick);
 		}
 	});

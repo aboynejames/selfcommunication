@@ -606,43 +606,43 @@ PerSwimmer.prototype.split = function(spidin) {
 			this.stoppedlist.push(spidin);		
 			// save the splits to pouchdb
 			var sptoday = new Date();
-				datesplitnumber = Date.parse(sptoday);
-// need to identify live swim element
-				var liveelementrecord = $(".recordcount").parent().attr('id');		
-				swimtype = $("#" + liveelementrecord + ".liveswimelement #swimtype").text();
-				swimstroke = $("#" + liveelementrecord + ".liveswimelement #swimstroke").text();
-				swimtechnique = $("#" + liveelementrecord + ".liveswimelement #swimtechnique").text();
-				swimdistance = $("#" + liveelementrecord + ".liveswimelement #swimdistance").text();
-				swimsplit = $("#swimsplit").val();
-				swimpool = $("#swimpoolsize").val();
-			
-				// form swim data
-				swimdatastatus = {};
-				swimdatastatus.swimdate = sptoday;
-				swimdatastatus.swimtype = swimtype;
-				swimdatastatus.Swimming_stroke = swimstroke;
-				swimdatastatus.swimtechnique = swimtechnique;
-				swimdatastatus.Distance = swimdistance;
-				swimdatastatus.swimsplit = swimsplit;
-				swimdatastatus.Swimmingpool = swimpool;	
-			// save to localpouchdb need to prepare buld array json structure 
-				newjsonswim = {};								
-				newjsonswim.swimmerid = '';
-				newjsonswim.swimmername = '';					
-				newjsonswim.session = {};
-				newjsonswim.swimmerid = spidin;
-					
-				newjsonswim.swimmername = liveLogic.nameholder[spidin];					
-				newjsonswim.session.sessionid = datesplitnumber;	
-				newjsonswim.session.swiminfo = swimdatastatus;	
-				newjsonswim.session.splittimes = this.sparray[spidin];
+			datesplitnumber = Date.parse(sptoday);
+			// need to identify live swim element
+			var liveelementrecord = $(".recordcount").parent().attr('id');		
+			swimtype = $("#" + liveelementrecord + ".liveswimelement #swimtype").text();
+			swimstroke = $("#" + liveelementrecord + ".liveswimelement #swimstroke").text();
+			swimtechnique = $("#" + liveelementrecord + ".liveswimelement #swimtechnique").text();
+			swimdistance = $("#" + liveelementrecord + ".liveswimelement #swimdistance").text();
+			swimsplit = $("#swimsplit").val();
+			swimpool = $("#swimpoolsize").val();
+		
+			// form swim data
+			swimdatastatus = {};
+			swimdatastatus.swimdate = sptoday;
+			swimdatastatus.swimtype = swimtype;
+			swimdatastatus.Swimming_stroke = swimstroke;
+			swimdatastatus.swimtechnique = swimtechnique;
+			swimdatastatus.Distance = swimdistance;
+			swimdatastatus.swimsplit = swimsplit;
+			swimdatastatus.Swimmingpool = swimpool;	
+		// save to localpouchdb need to prepare buld array json structure 
+			newjsonswim = {};								
+			newjsonswim.swimmerid = '';
+			newjsonswim.swimmername = '';					
+			newjsonswim.session = {};
+			newjsonswim.swimmerid = spidin;
+				
+			newjsonswim.swimmername = liveLogic.nameholder[spidin];					
+			newjsonswim.session.sessionid = datesplitnumber;	
+			newjsonswim.session.swiminfo = swimdatastatus;	
+			newjsonswim.session.splittimes = this.sparray[spidin];
 
-				livepouch.singleSave(newjsonswim);
-					
-				// emitt socket back to pi server
-				starttiming.classSocket.emit('contextMixer', newjsonswim);
-				// emitt identity timing event trigger
-				starttiming.classSocket.emit('checkSplitID', newjsonswim);			
+			livepouch.singleSave(newjsonswim);
+				
+			// emitt socket back to pi server
+			starttiming.classSocket.emit('contextMixer', newjsonswim);
+			// emitt identity timing event trigger
+			starttiming.classSocket.emit('checkSplitID', newjsonswim);			
 
 
 			// need to stop the master stopwatch if all swimmers have finished			

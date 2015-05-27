@@ -90,46 +90,46 @@ recordQS.prototype.recordLogic = function(recordin, detailin) {
 *
 */	
 recordQS.prototype.recordHTMLset = function(commdatein) {
-	
-		function localCommcall(commdatein, callback) {  
+
+	function localCommcall(commdatein, callback) {  
 		livepouch.mapQueryCommdate(commdatein, callback);
-		} 
+	} 
 			
-				localCommcall(commdatein, function(rtmap) {  
+	localCommcall(commdatein, function(rtmap) {  
 
-				presentcommunication = '';
+		presentcommunication = '';
 
-				rtmap.rows.forEach(function(rowcomm){
-						
-					if(rowcomm.key == commdatein)
-					{
-						// get the index keys of the object
-						var setgroupcomm = Object.keys(rowcomm.value[1]);
-						
-						setgroupcomm.forEach(function(seteldata) {
-					
-						// get the communication data and display programme
-						presentcommunication += 1;
-						if( typeof rowcomm.value[1][seteldata].commrepetition === "undefined")
-						{
-						}
-						else
-						{					
-								$(".liveswimset").append('<div class="liveswimelement" id="livedate' + seteldata + '" data-recordid="' + seteldata + '"><div class="liveselect" id="" data-recordid="' + seteldata + '"><a href="" id="liveswimelementstart" data-recordid="' + seteldata + '" >##</a></div><div id="swimrepetition" class="recordlive" >' + rowcomm.value[1][seteldata].commrepetition + '</div> ' + '<div id="swimtype">' + rowcomm.value[1][seteldata].commtype + '</div> <div id="swimstroke">' + rowcomm.value[1][seteldata].commstroke + '</div> <div id="swimdistance">' + rowcomm.value[1][seteldata].commdistance + '</div> <div id="swimtechnique">' + rowcomm.value[1][seteldata].commtechnique + '</div></div>' );
-							}
-								
-						});
-								
+		rtmap.rows.forEach(function(rowcomm){
+				
+			if(rowcomm.key == commdatein)
+			{
+				// get the index keys of the object
+				var setgroupcomm = Object.keys(rowcomm.value[1]);
+				
+				setgroupcomm.forEach(function(seteldata) {
+			
+				// get the communication data and display programme
+				presentcommunication += 1;
+				if( typeof rowcomm.value[1][seteldata].commrepetition === "undefined")
+				{
+				}
+				else
+				{					
+						$(".liveswimset").append('<div class="liveswimelement" id="livedate' + seteldata + '" data-recordid="' + seteldata + '"><div class="liveselect" id="" data-recordid="' + seteldata + '"><a href="" id="liveswimelementstart" data-recordid="' + seteldata + '" >##</a></div><div id="swimrepetition" class="recordlive" >' + rowcomm.value[1][seteldata].commrepetition + '</div> ' + '<div id="swimtype">' + rowcomm.value[1][seteldata].commtype + '</div> <div id="swimstroke">' + rowcomm.value[1][seteldata].commstroke + '</div> <div id="swimdistance">' + rowcomm.value[1][seteldata].commdistance + '</div> <div id="swimtechnique">' + rowcomm.value[1][seteldata].commtechnique + '</div></div>' );
 					}
-
+						
 				});
-				
-					// markup first repetition as first element to record
-					$('<div class="recordcount" >1</div>').insertBefore(".liveswimelement:first #swimrepetition");
-				
-			});
-			// empty the commuication on screen.
-			$(".communicationelement").empty();
+						
+			}
+
+		});
+		
+		// markup first repetition as first element to record
+		$('<div class="recordcount" >1</div>').insertBefore(".liveswimelement:first #swimrepetition");
+		
+	});
+	// empty the commuication on screen.
+	$(".communicationelement").empty();
 
 };	
 
@@ -155,7 +155,7 @@ recordQS.prototype.swimdataCloud = function(cloudsave) {
 				// pass on markup and add data to live data model
 				var serverdatain = JSON.parse(saveback);
 				// does this individual have data?  If not provide links enter data or sportsBOX
-				if(serverdatain.save ==  "emailIDpassed")
+				if(serverdatain.save ==  "emailIDpassed" || serverdatain.save ==  "passed" || serverdatain.save == "setcommunication")
 				{
 					$("#syncbackup").html('finished');	
 					

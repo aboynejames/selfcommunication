@@ -399,9 +399,9 @@ nav {
 	text-align:left;
 	margin-top: 2px;
 	margin-left: 2px;
-	width:400px;
-	height:20px;
-	background-color: #00FFFF;
+	width:440px;
+	height:auto;
+	background-color: #0066CC;
 	color: white;
 	font-size:1em;
 	font-weight: bold;

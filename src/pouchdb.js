@@ -71,7 +71,7 @@ pouchdbSettings.prototype.updateSingle = function(datain) {
 */	
 pouchdbSettings.prototype.allDocs = function() {
 
-		this.livepouch.allDocs({include_docs: true}, function(err, response) { 
+	this.livepouch.allDocs({include_docs: true}, function(err, response) { 
 		
 	});
 		
@@ -85,10 +85,10 @@ pouchdbSettings.prototype.allDocs = function() {
 */	
 pouchdbSettings.prototype.getDoc = function(callbackin, docid) {
 
-		this.livepouch.get(docid, function(err, response) {
-
-			callbackin(response);
-		});
+	this.livepouch.get(docid, function(err, response) {
+//console.log(response);
+		callbackin(response);
+	});
 
 };
 
@@ -97,17 +97,52 @@ pouchdbSettings.prototype.getDoc = function(callbackin, docid) {
 * @method putDoc		
 *
 */	
-pouchdbSettings.prototype.putSingleDoc = function(docidupdate) {
+pouchdbSettings.prototype.putStartSingleDoc = function(startdatein) {
 
-	this.livepouch.put({ _id: 'mydoc', _rev: docidupdate, title: ''}).then(function (response) {
-	  // handle response
-console.log('single update response');
-console.log(response);		
-	}).catch(function (err) {
-console.log('erro put single');		
-	console.log(err);
-	});
+	this.livepouch.put({
+	    _id: 'syncdate',
+	    lastsync: startdatein
+	  }, function(err, response) {
+		if (err) {
+
+		    return console.log(err); 
+		}
+//console.log('successful single put of START date');
+	    // handle response
+	  });
+	  
+};
+
+
+/**
+*  Update specific document if ID provided
+* @method putDoc		
+*
+*/	
+pouchdbSettings.prototype.putSingleDoc = function(syncdatain) {
+
+	this.livepouch.get('syncdate', function(err, doc) {
+	  if (err) 
+	{
+console.log('eeerrror');		
+		return console.log(err); 
+	}
 	
+		db.put({
+		    _id: 'syncdate',
+		    _rev: doc._rev,
+		    lastsync: syncdatain
+		  }, function(err, response) {
+			if (err) {
+
+			    return console.log(err); 
+			}
+//console.log('successful single put of new dATE');
+			
+		    // handle response
+		  });
+	});
+
 };
 
 /**
