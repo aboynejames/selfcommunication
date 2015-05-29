@@ -151,7 +151,6 @@ recordQS.prototype.swimdataCloud = function(cloudsave) {
 			data: cloudready,
 						
 			success: function(saveback){
-			
 				// pass on markup and add data to live data model
 				var serverdatain = JSON.parse(saveback);
 				// does this individual have data?  If not provide links enter data or sportsBOX
@@ -203,7 +202,6 @@ recordQS.prototype.checkdataCloud = function(cloudcheck) {
 		
 			// pass on markup and add data to live data model
 			var serverdatain = JSON.parse(databack);
-console.log(serverdatain.check);
 			// does this individual have data?  If not provide links enter data or sportsBOX
 			if(serverdatain.check ==  "newemailids")
 			{

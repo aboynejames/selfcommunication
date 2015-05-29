@@ -6,32 +6,6 @@
 $(document).ready(function(){
 
 	var startobject = new visability();
-
-	$("#setsettings").hide();
-	$("#canvasDiv").hide();
-	/**
-	*  Hide in place html
-	*/
-	$("#loadlaneselect").hide();
-	$("#loadswimmers").hide();
-	$("#addnewswimmer").hide();
-	$("#loadclearswimmers").hide();
-	$(".swimsettings").hide();
-	$("#analysistype").hide();
-	$(".peredit").hide();
-	$(".historicalplace").hide();
-	$("#signupspace").hide();		
-	$("#welcomesummary").show();		
-	$("#siginformarea").hide();
-	$("#dshare-api").hide();
-	$("#dshare-api-add").hide();
-	$(".pool").hide();
-	$("#syncdata").hide();
-	$("#email-data-id").hide();
-	$("#clearpouchdb").hide();
-	$(".inmenu-text").hide();
-	
-	
 	// create pouchdb object
 	livepouch = new pouchdbSettings();
 	//delete local pouchdb database		
@@ -44,6 +18,7 @@ $(document).ready(function(){
 	liveServerclock = new serverClock();
 	liveRecord = new recordQS();
 	liveHTML = new ttHTML();
+	liveHTML.starthide();
 	llliveListen = new llListener(starttiming);
 	liveSync = new synccloud();
 	
@@ -96,7 +71,7 @@ $(document).ready(function(){
 		//$("#facebookin").attr('id', 'facebookout');
 		$("#syncdata").show();
 		$("#email-data-id").show();
-		$("#clearpouchdb").show();
+		//$("#clearpouchdb").show();
 		$(".inmenu-text").show();
 		
 	}
@@ -148,7 +123,6 @@ $(document).ready(function(){
 		var resultord = $('#sortable1').sortable('toArray');
 		idclick = $(this).attr("id");
 		idtitle = $(this).attr("title");	
-console.log(idclick);		
 		if(idclick != "dshare")
 		{
 			// pass on the id of the swimmer  2 pass on the type of click,  start, reset, split, stop	
@@ -168,9 +142,7 @@ console.log(idclick);
 				
 							
 				case"dshare":
-				
 					var dshareidstatus = $("#dshare").data("dshare-status");
-		
 					if(dshareidstatus == "on")
 					{
 						$("#dshare-api").show();
@@ -179,9 +151,9 @@ console.log(idclick);
 					else
 					{
 						$("#dshare-api").hide();
+						$("#dshare-api-add").hide();
 						$("#dshare").data("dshare-status", "on");
 					}	
-		
 				break;
 
 			}
@@ -197,9 +169,7 @@ console.log(idclick);
 	$(".D-apis").click(function(e) {
 		e.preventDefault(e);
 		var $sotgt = $(e.target);			
-//console.log($sotgt);
 		idclick = $($sotgt).attr("id");
-//console.log(idclick );
 		switch(idclick){
 						
 			case"bitcoin-api-status":
@@ -291,97 +261,97 @@ console.log(idclick);
 	*/	
 	$("#newmaster").click(function (e) {
 				
-					e.preventDefault(e);
-					// has the user signed in?
-					setsaveallowed = '';
-					setsaveallowed = $.cookie("traintimer");
-				
-				var $tgt = $(e.target);
+		e.preventDefault(e);
+		// has the user signed in?
+		setsaveallowed = '';
+		setsaveallowed = $.cookie("traintimer");
 	
-			if ($tgt.is("#newmasteradd")) {
-					
-				// need to be both a name and a lane number validation
-				newmastnameis = $("#newmasteradd input#newmastid ").val();
-				newemailis = $("#newmasteradd input#emailid ").val();				
-				newlane = $("#thelaneoptionsnew").val();
-
-				if(newmastnameis.length > 0 && (newlane.length > 0 && newlane != -1) )
-				{
-					hashCode = function(str){
-					var hash = 0;
-					if (str.length === 0) return hash;
-					for (i = 0; i < str.length; i++) {
-							char = str.charCodeAt(i);
-							hash = ((hash<<5)-hash)+char;
-							hash = hash & hash; // Convert to 32bit integer
-					}
-
-						return hash;
-					};
+		var $tgt = $(e.target);
+	
+		if ($tgt.is("#newmasteradd")) {
 				
-					var newidnumberstart = new Date();
-					newswimmerguid = Date.parse(newidnumberstart);
-					newmastidish = hashCode(newmastnameis);
-					newmastidisrand = Math.floor((Math.random()*10000000)+1);
-					newmastidis = newmastidisrand + '-' + newmastidish;														
-					// need to save new master to couch, name and masters id,  validate unique ID number
-					firstsavenewmaster = {};
-					firstsavenewmaster.name = newmastnameis;
-					firstsavenewmaster.swimmerid = newmastidis;
-					firstsavenewmaster.emailid = newemailis;
-					firstsavenewmaster.lanetrain = newlane;	
-					firstsavenewmaster.emailstatus = 0;
-					firstsavenewmaster.startdate = newswimmerguid;	
-					jsonfirstsavenewmaster =  JSON.stringify(firstsavenewmaster);
-					//  make save to poudbfirst
-					livepouch.singleSave(firstsavenewmaster);	
-						
-					$("#newmaster").hide();
-					// add html code for new swimmer added
-					newswimcode = '';		
-					newswimcode = liveHTML.fromswimmers(newmastnameis, newmastidis);
-					liveLogic.setNameID(newmastnameis, newmastidis);
-					liveLogic.setNameID(newemailis, newmastidis);	
-					
-					$("#sortable1").append(newswimcode);
-					$("#saveconfirmswimmer").text('new master added');
-					$("#saveconfirmswimmer").show();
-					$("#saveconfirmswimmer").fadeOut("slow");
-					$("#addswimmer").attr("title", "on");
-					$(".peredit").hide();
-					$(".peranalysis").hide();		
-					
-					$("#controloptions").hide();
-					$(".peredit").hide();
-					$(".historicalchart").hide();
-					$(".historicalsummary").hide();
-					$(".historicalbio").hide();
-					$("#viewdata").attr("title", "on");
-					$("#startsort").attr("title", "on");
-					$("#loadlane").attr("title", "on");
-					$("#loadlane").attr("class", "control-text");
-					
-					$(".social").hide();
-					$("#socialcontext").css('background', 'white');		
-					$("#socialcontext").data("socialstatus", "on");		
+			// need to be both a name and a lane number validation
+			newmastnameis = $("#newmasteradd input#newmastid ").val();
+			newemailis = $("#newmasteradd input#emailid ").val();				
+			newlane = $("#thelaneoptionsnew").val();
 
+			if(newmastnameis.length > 0 && (newlane.length > 0 && newlane != -1) )
+			{
+				hashCode = function(str){
+				var hash = 0;
+				if (str.length === 0) return hash;
+				for (i = 0; i < str.length; i++) {
+						char = str.charCodeAt(i);
+						hash = ((hash<<5)-hash)+char;
+						hash = hash & hash; // Convert to 32bit integer
 				}
-				else
-				{
-					// need to prompt to add name or select lane number
-					adderrormessage = 'Please ';
-					if(newmastnameis.length === 0 )
-					{ 
-						adderrormessage += 'add a name ';
-					}
-					if(newlane == -1 )
-					{
-							adderrormessage += 'select a lane ';
-					}
-					$("#newswimerror").html(adderrormessage);
-				}
+
+					return hash;
+				};
+			
+				var newidnumberstart = new Date();
+				newswimmerguid = Date.parse(newidnumberstart);
+				newmastidish = hashCode(newmastnameis);
+				newmastidisrand = Math.floor((Math.random()*10000000)+1);
+				newmastidis = newmastidisrand + '-' + newmastidish;														
+				// need to save new master to couch, name and masters id,  validate unique ID number
+				firstsavenewmaster = {};
+				firstsavenewmaster.name = newmastnameis;
+				firstsavenewmaster.swimmerid = newmastidis;
+				firstsavenewmaster.emailid = newemailis;
+				firstsavenewmaster.lanetrain = newlane;	
+				firstsavenewmaster.emailstatus = 0;
+				firstsavenewmaster.startdate = newswimmerguid;	
+				jsonfirstsavenewmaster =  JSON.stringify(firstsavenewmaster);
+				//  make save to poudbfirst
+				livepouch.singleSave(firstsavenewmaster);	
+					
+				$("#newmaster").hide();
+				// add html code for new swimmer added
+				newswimcode = '';		
+				newswimcode = liveHTML.fromswimmers(newmastnameis, newmastidis);
+				liveLogic.setNameID(newmastnameis, newmastidis);
+				liveLogic.setNameID(newemailis, newmastidis);	
+				
+				$("#sortable1").append(newswimcode);
+				$("#saveconfirmswimmer").text('new master added');
+				$("#saveconfirmswimmer").show();
+				$("#saveconfirmswimmer").fadeOut("slow");
+				$("#addswimmer").attr("title", "on");
+				$(".peredit").hide();
+				$(".peranalysis").hide();		
+				
+				$("#controloptions").hide();
+				$(".peredit").hide();
+				$(".historicalchart").hide();
+				$(".historicalsummary").hide();
+				$(".historicalbio").hide();
+				$("#viewdata").attr("title", "on");
+				$("#startsort").attr("title", "on");
+				$("#loadlane").attr("title", "on");
+				$("#loadlane").attr("class", "control-text");
+				
+				$(".social").hide();
+				$("#socialcontext").css('background', 'white');		
+				$("#socialcontext").data("socialstatus", "on");		
+
 			}
-		
+			else
+			{
+				// need to prompt to add name or select lane number
+				adderrormessage = 'Please ';
+				if(newmastnameis.length === 0 )
+				{ 
+					adderrormessage += 'add a name ';
+				}
+				if(newlane == -1 )
+				{
+						adderrormessage += 'select a lane ';
+				}
+				$("#newswimerror").html(adderrormessage);
+			}
+		}
+	
 	});
 		
 	/*

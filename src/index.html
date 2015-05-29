@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html lang="en" > <!--manifest="communication.appcache"--> 
+  <head>
+	<meta charset="utf-8">
+	<title>Open Sport Project - Communication Mixer</title>
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, ' name='viewport' />
+	<meta name="description" content="">
+	<meta name="author" content="">
 
 	<link rel="stylesheet" type="text/css" href="styleprogramme.css" media="all" />
 	<link rel="stylesheet" type="text/css" href="stopwatch.css" media="all" />
@@ -205,7 +210,7 @@
 			<div id="live-set-holder">
 				<div class="liveswimset"></div>
 				<div id="set-display">
-					<a href="" id="show-complete-set">Show all</a>
+					<!--<a href="" id="show-complete-set">Show all</a>-->
 				</div>
 			</div>
 		</div>
@@ -346,9 +351,9 @@
 	<nav>
 		<ul>Sign-in
 			<li>
-				<a id="localin" href="#" class="control-text">Local</a>
+				<a id="localin" href="#" class="control-text"  data-localin-status="on">Local</a>
 				<a id="twitterin" href="/twitterin" title="/twitterin" class="control-text">Twitter</a>
-				<a id="facebookin" href="/facebookin" title="/facebookin" class="control-text">Facebook</a>
+				<!--<a id="facebookin" href="/facebookin" title="/facebookin" class="control-text">Facebook</a>-->
 				<!--<a id="signinopener" href="/signin" title="signin" class="control-text">Sign-in to store data</a>-->
 				<div id="ifsignedin"></div>
 				<div id="siginformarea" style="display: none;">
@@ -364,7 +369,7 @@
 		<ul>
 			<li class="inmenu-text"><a id="syncdata" href="#" style="display: none;">Sync data</a></li>
 			<li class="inmenu-text"><a id="email-data-id" href="#" style="display: none;">Email IDs</a></li>
-			<li class="inmenu-text"><a id="clearpouchdb" href="#"  style="display: none;">Clear all data</a></li>
+			<li class="inmenu-text-local"><a id="clearpouchdb"href="#"  style="display: none;">Delete permanently all local data</a></li>
 			<li class="inmenu-text-feedback"><span id="syncbackup"></span><span id="email-message"></span></li>
 		</ul>
 	</nav>
@@ -381,7 +386,7 @@
 					<nav>
 						<ul>
 							<li>
-							 <a href="" id="dshare" data-dshare-status="on" ><img id="image-dshare" src="images/dshare-small.png" /></a> Social-share  
+							 <a href="" id="dshare" data-dshare-status="on" ><img id="image-dshare" src="images/dshare-small.png" /></a> <a href="" id="sshare" data-sshare-status="on" ><img id="image-sshare" src="images/sshare-small.png" /></a>  
 							</li>
 						</ul>
 					</nav>
@@ -398,7 +403,7 @@
 </section>
 	
 	<footer id="footer" class="body">
-		<p>2015-v0.1.80 <a href="">Communication - open sport project</a></p>
+		<p>2015-v0.2.0 <a href="">Communication - open sport project</a></p>
 	</footer>	
 	
 </body>

@@ -33,13 +33,10 @@ SwimtimeController.prototype.identifyswimmer = function(swimtitle, clickid) {
 
 	this.identifer = swimtitle;
 	this.clicktype = clickid;
-console.log('clickid= ' + this.clicktype);
-console.log('title = ' + this.identifer);		
 	this.activetimeclock.startclock.load();	
 		
 	if(clickid == "split" || clickid == "stop" || clickid == "peranalysisid" || clickid =="pereditidremove" )
 	{
-console.log('stopwatch function called');		
 		this.activetimeclock.splitswimmerid(this.identifer);
 	}
 				
@@ -47,7 +44,6 @@ console.log('stopwatch function called');
 		
 		case "start": 
 			this.activetimeclock.startclock.startStop();
-			console.log('swithc in stopwatch' );
 		break;
 		
 		case "split":
@@ -503,6 +499,26 @@ $("#liveswimset").text('live: ' + currentsetset);
 			window.open(homeurl, "_self");
 
 		break;
+
+		case "localin":	
+			var localinstatus = $("#localin").data("localin-status");				
+					if(localinstatus == "on")
+					{
+						$("#localin").text('Local Sign-out');	
+						$("#clearpouchdb").show();
+						$(".inmenu-text-local").show();
+						$("#localin").data("localin-status", "off");						
+					}
+					else
+					{
+						$("#localin").text('Local');	
+						$("#clearpouchdb").hide();
+						$(".inmenu-text-local").hide();
+						$("#localin").data("localin-status", "on");
+					}				
+			
+
+		break;				
 				
 	} // closes switch		
 			
@@ -992,7 +1008,6 @@ MasterWatch.prototype.startStop = function() {
 * @method recordmanagement
 */
 MasterWatch.prototype.recordmanagement = function() { 
-console.log('record management being called');
 	// need to keep a counter of element order start if with one
 	var norepetitionsobject = $('#swimrepetition.recordlive');	
 	

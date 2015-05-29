@@ -124,7 +124,7 @@ pouchdbSettings.prototype.putSingleDoc = function(syncdatain) {
 	this.livepouch.get('syncdate', function(err, doc) {
 	  if (err) 
 	{
-console.log('eeerrror');		
+//console.log('eeerrror');		
 		return console.log(err); 
 	}
 	
@@ -303,11 +303,11 @@ pouchdbSettings.prototype.filterchangeLog = function(callbackin, filterin) {
 pouchdbSettings.prototype.replicatelocal = function() {
 
 	this.livepouch.replicate.to('localbackup').on('complete', function () {
- console.log(' yay, we re done!');
+ //console.log(' yay, we re done!');
 		
 	}).on('error', function (err) {
 		
-console.log('boo, something went wrong!');
+//console.log('boo, something went wrong!');
 	});
 
 };
@@ -320,12 +320,12 @@ console.log('boo, something went wrong!');
 pouchdbSettings.prototype.replicatecouchdb = function() {
 
 	this.livepouch.replicate.to('http://localhost:5984/pouchdbreplicate').on('complete', function () {
- console.log(' yay, we re done!');
+ //console.log(' yay, we re done!');
 		
 	}).on('error', function (err) {
 		
-console.log('boo, something went wrong!');
-console.log(err);		
+//console.log('boo, something went wrong!');
+//console.log(err);		
 	});	
 
 };
@@ -336,12 +336,10 @@ console.log(err);
 *
 */	
 pouchdbSettings.prototype.synccouchdb = function() {
-console.log('start of syncing with couchdb');
-console.log(this.account.pouchdbname);
+
 	this.livepouch.sync('selfenginelocal', 'http://www.mepath.co.uk:5984/pouchdbreplicate').on('change', function (info) {
-  // handle change
-consol.log('sync changes');		
-console.log(info);		
+	// handle change
+		
 	});
 
 };
@@ -354,8 +352,7 @@ console.log(info);
 *
 */	
 pouchdbSettings.prototype.deletePouch = function() {
-console.log('delete whole pouchdb');
-console.log(this.livepouch);	
+
 	this.livepouch.destroy(this.account.pouchdbname, function(err, info) { });
 
 

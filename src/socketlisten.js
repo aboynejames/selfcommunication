@@ -31,7 +31,6 @@ llListener.prototype.activeListeners = function() {
 	*/
 	this.socketpi.on('startSwimmers', function (startSwimmerID) {
 		// produce starting swimmers
-console.log('blue tooth ids');		
 		var startswimmers = '';
 		startSwimmerID.forEach(function(idswimmer){
 			

@@ -320,9 +320,9 @@ nav {
 
 /** set analysis / visualisation */
 .tools {
-	border:1px solid red;
+	border:0px solid red;
 	display:none;
-	margin: 10px;
+	margin: 30px;
 }
 
 
@@ -367,6 +367,39 @@ nav {
 	margin-top: 2px;
 	margin-left: 2px;
 	width:120px;
+	height:20px;
+	background-color: #00FFFF;
+	background: -webkit-gradient(linear, left top, left bottom, from(#00FFFF), to(#6495ED));
+	background: -webkit-linear-gradient(top, #00FFFF, #6495ED);
+	background: -moz-linear-gradient(top, #00FFFF, #6495ED);
+	background: -ms-linear-gradient(top, #00FFFF, #6495ED);
+	background: -o-linear-gradient(top, #00FFFF, #6495ED);
+	background: linear-gradient(top, #00FFFF, #6495ED);
+	border: 1px solid #6495ED;
+	border-bottom: 1px solid #5b992b;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-ms-border-radius: 3px;
+	-o-border-radius: 3px;
+	box-shadow: inset 0 1px 0 0 #9fd574;
+	-webkit-box-shadow: 0 1px 0 0 #9fd574 inset ;
+	-moz-box-shadow: 0 1px 0 0 #9fd574 inset;
+	-ms-box-shadow: 0 1px 0 0 #9fd574 inset;
+	-o-box-shadow: 0 1px 0 0 #9fd574 inset;
+	color: white;
+	font-size:1em;
+	font-weight: bold;
+	padding: 4px 10px;
+	text-shadow: 0 -1px 0 #396715;
+}
+
+.inmenu-text-local {
+	display:block;
+	text-align:left;
+	margin-top: 2px;
+	margin-left: 2px;
+	width:400px;
 	height:20px;
 	background-color: #00FFFF;
 	background: -webkit-gradient(linear, left top, left bottom, from(#00FFFF), to(#6495ED));
@@ -615,13 +648,14 @@ label {
 	
 #pooltrainsettings {
 	display:block;	
-	border:1px solid blue;
+	margin:30px;
+	border:0px solid blue;
 }
 	
 .recordswimsettingslabel {
 	display:inline-block;
 	margin-top:6px;
-	border:1px solid red;	
+	border:0px solid red;	
 	width:300px;
 }
 	
@@ -745,7 +779,7 @@ label {
 
 .liveswimelement {
 	margin:20px;
-	border:1px solid blue;
+	border:0px solid blue;
 	font-size:1.8em;
 	clear:both;
 }
@@ -826,7 +860,15 @@ label {
     height: auto;
 }
 
-
+/**
+*
+* social share image
+*
+*/
+#image-sshare  {
+	width: 4%;
+    height: auto;
+}
 
 @media screen and (max-width: 320px) {
 

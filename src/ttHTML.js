@@ -16,6 +16,40 @@ var ttHTML = function() {
 };
 
 /**
+*  instant hides on page load
+* @method starthide		
+*
+*/	
+ttHTML.prototype.starthide = function() {
+
+	$("#setsettings").hide();
+	$("#canvasDiv").hide();
+	/**
+	*  Hide in place html
+	*/
+	$("#loadlaneselect").hide();
+	$("#loadswimmers").hide();
+	$("#addnewswimmer").hide();
+	$("#loadclearswimmers").hide();
+	$(".swimsettings").hide();
+	$("#analysistype").hide();
+	$(".peredit").hide();
+	$(".historicalplace").hide();
+	$("#signupspace").hide();		
+	$("#welcomesummary").show();		
+	$("#siginformarea").hide();
+	$("#dshare-api").hide();
+	$("#dshare-api-add").hide();
+	$(".pool").hide();
+	$("#syncdata").hide();
+	$("#email-data-id").hide();
+	$("#clearpouchdb").hide();
+	$(".inmenu-text").hide();
+	$(".inmenu-text-local").hide();
+
+};
+
+/**
 * Display checkbox of swimmer
 * @method fromswimmers		
 *

@@ -70,7 +70,7 @@ synccloud.prototype.checkDatafilters = function() {
 *
 */	
 synccloud.prototype.sessionDatacall = function(datelastsync) {
-console.log('LIST of training session data');	
+
 	localsplitstodelete = [];
 	
 	function localDatalog(callback) {  
@@ -81,14 +81,9 @@ console.log('LIST of training session data');
 	};
 
 	localDatalog( function(trainlog) {
-		// need to differenciate between the type
-console.log('last DATE live session');
-console.log(datelastsync);
-console.log(trainlog);	
+		// need to differenciate between the type	
 		if(trainlog === undefined || trainlog.results.length == 0)
-		{
-console.log(trainlog.results.length)
-console.log('session pass first logic');			
+		{			
 			// no data to sync
 			$("#syncbackup").html('No new data to sync to cloud');	
 		}
@@ -96,9 +91,6 @@ console.log('session pass first logic');
 		{
 			if(trainlog.results[0].doc.session)
 			{
-console.log('LIST of training session data');				
-console.log(trainlog.results);	
-
 				clouddatalist = {};
 				peernetworknotified = {};
 				// save the training data and delete ready for next batch of data
@@ -106,12 +98,7 @@ console.log(trainlog.results);
 				trainlog.results.forEach(function(rowsswimsplit){
 
 					if (rowsswimsplit.doc.session)
-					{
-console.log('session date');
-console.log(rowsswimsplit.doc.session.sessionid);
-//rowsswimsplit.doc.session.sessionid = 1732720898000;	
-console.log('current last sync date4');
-console.log(datelastsync);						
+					{				
 						// only save data new since last sync data
 						if( rowsswimsplit.doc.session.sessionid > datelastsync )
 						{
@@ -123,13 +110,11 @@ console.log(datelastsync);
 						
 							//keep track of id of data being sent.
 							clouddatalist[rowsswimsplit.doc.swimmerid] = 1;
-console.log('make ajax request to cloud');
 							// save data locally and back to cloud
 							liveRecord.swimdataCloud(buildsyncsplits);
 						}	
 						else
 						{
-console.log('no data to sync back SESSION');
 							$("#syncbackup").html('No new data to sync to cloud');	
 						}
 						
@@ -148,7 +133,7 @@ console.log('no data to sync back SESSION');
 *
 */	
 synccloud.prototype.dataSetcall  = function(datelastsync) {
-console.log('LIST of SET data');		
+	
 	function localDatalog(callback) {  
 		//livepouch.changeLog();
 		//livepouch.filterchangeLog(callback, 'swimmers/nameslist');
@@ -158,8 +143,6 @@ console.log('LIST of SET data');
 
 	localDatalog( function(trainlog) {
 		// need to differenciate between the type
-console.log('last DATE SET live');
-console.log(datelastsync);
 		if(trainlog === undefined || trainlog.results.length == 0)
 		{
 			// no data to sync
@@ -170,12 +153,7 @@ console.log(datelastsync);
 			if(trainlog.results[0].doc.commdate)
 			{
 			// save the training test authored and keep a local copy			
-console.log('LIST of SET data');				
-console.log(trainlog.results);	
-console.log(datelastsync);				
 				trainlog.results.forEach(function(rowset){
-console.log(rowset.doc.commdate);					
-//rowset.doc.commdate = 1732720898000;
 					// only save data new since last sync data
 					if(rowset.doc.commdate > datelastsync)
 					{							
@@ -189,7 +167,6 @@ console.log(rowset.doc.commdate);
 					}	
 					else
 					{
-	console.log('no data to sync back SET COMM');
 						$("#syncbackup").html('No new data to sync to cloud');	
 					}						
 				});
@@ -207,7 +184,7 @@ console.log(rowset.doc.commdate);
 *
 */	
 synccloud.prototype.dataIdentitycall = function(datelastsync) {
-console.log('LIST of identity data');		
+	
 	function localDatalog(callback) {  
 		//livepouch.changeLog();
 		livepouch.filterchangeLog(callback, 'swimmers/nameslist');
@@ -217,8 +194,6 @@ console.log('LIST of identity data');
 
 	localDatalog( function(trainlog) {
 		// need to differenciate between the type
-console.log('last DATE ID live');
-console.log(datelastsync);
 		if(trainlog === undefined || trainlog.results.length == 0)
 		{
 			// no data to sync
@@ -228,12 +203,8 @@ console.log(datelastsync);
 		{
 			if (trainlog.results[0].doc.name)
 			{
-console.log('LIST of identity data');				
-console.log(trainlog.results);				
-
 				// send all the id back to the cloud and from there if multi ID will be contacted via emailemailemail
-				trainlog.results.forEach(function(rowident){
-//rowident.doc.startdate =1732720898000;						
+				trainlog.results.forEach(function(rowident){					
 					// only save data new since last sync data
 					if( rowident.doc.startdate > datelastsync )
 					{							
@@ -250,7 +221,6 @@ console.log(trainlog.results);
 					}
 					else
 					{
-	console.log('no data to sync back ID email etc');
 						$("#syncbackup").html('No new data to sync to cloud');	
 					}						
 				});
