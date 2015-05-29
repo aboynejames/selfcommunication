@@ -50,8 +50,8 @@ $(document).ready(function(){
 	
 	
 	// connect to socket.io
-	cloudurl = 'http://localhost:8881';
-	homeurl = 'http://localhost/ll/selfcommunication/src/index.html';
+	cloudurl = 'http://localhost:8881';  // local networking IP, e.g. a raspberrypi  NB edt socketlisten.js  class IP too.
+	homeurl = 'http://localhost/ll/selfcommunication/src/index.html';  // change to hosting URL
 	// make socket available to timing classes
 	
 	/*
@@ -666,43 +666,43 @@ $(document).ready(function(){
         var makePUTRequest = function(){
 
             // Make the PUT request.
-            $.ajax({
+		$.ajax({
                 type: "GET",
                 url: "http://www.mepath.co.uk:8833/signinmepath/" + usernamein + '/' + cookieidhash + '/' + passwordin,
                 contentType: "application/json",
                 dataType: "text",
-success: function( resultback ){
+		success: function( resultback ){
 
-					this.acceptdetails = JSON.parse(resultback);
-					
-					if(this.acceptdetails.signin == 'passed') {		
-												$.cookie("traintimer", cookieidhash,  { expires: 7 });
-												$("#ifsignedin").show();	
-												$("#ifsignedin").html('<a class="control-text" text="SignOut" title="signout" href="#"  id="signincloser" >Sign-out</a> ' + usernamein );
-												$("#siginformarea").dialog( "close" );
-												$("#signinopener").hide();
-												$("#sortable1").empty();
-												$("#signupstart").hide();
-												$("#syncdata").show();
-												$("#clearpouchdb").show();
-										
-																				
-												}
-												else {
-													$("#responsemessage").html('Signin Failed, try again');
-												}
-
-				},
-				error: function( error ){
-					// Log any error.
-//console.log( "ERROR:", error );
-				},
-				complete: function(){
-
+			this.acceptdetails = JSON.parse(resultback);
+			
+			if(this.acceptdetails.signin == 'passed') {		
+				$.cookie("traintimer", cookieidhash,  { expires: 7 });
+				$("#ifsignedin").show();	
+				$("#ifsignedin").html('<a class="control-text" text="SignOut" title="signout" href="#"  id="signincloser" >Sign-out</a> ' + usernamein );
+				$("#siginformarea").dialog( "close" );
+				$("#signinopener").hide();
+				$("#sortable1").empty();
+				$("#signupstart").hide();
+				$("#syncdata").show();
+				$("#clearpouchdb").show();
+		
+												
 				}
-			});
+				else {
+					$("#responsemessage").html('Signin Failed, try again');
+				}
 
-		};
+			},
+			error: function( error ){
+				// Log any error.
+//console.log( "ERROR:", error );
+			},
+			complete: function(){
+
+			}
+		});
+
+	};
 
 		// Execute the PUT request.
 		makePUTRequest();
