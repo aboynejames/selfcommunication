@@ -518,7 +518,7 @@ $("#liveswimset").text('live: ' + currentsetset);
 			}				
 		break;
 			
-		case "help":
+		case "help-online":
 			
 			window.open("http://www.smartstopwatch.org/blog/help", "_self");
 
