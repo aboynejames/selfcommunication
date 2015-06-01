@@ -226,6 +226,28 @@ llLogic.prototype.frameworklogic = function(intentionin) {
 		}
 	break;	
 		
+	case "hidecontext":
+		$("#analysistype").show();
+		var hidestatus = $("#hidecontext").data("attention-hide");
+		if(hidestatus == 'on') {
+			
+			//$("#attention-live").hide(); 
+			$("nav#timetext").hide();
+			$("#hidecontext").data("attention-hide", "off");
+			$("#hidecontext").text('Show');	
+			//$("#hidecontext").show();
+		}
+		else
+		{
+			$("nav#timetext").show();
+			//$("#attention-live").show();
+			$("#hidecontext").data("attention-hide", "on");
+			$("#hidecontext").text('Hide');	
+			
+		}
+	
+	break;
+		
 	case "skipelement":
 		starttiming.activetimeclock.startclock.recordmanagement();
 	break;

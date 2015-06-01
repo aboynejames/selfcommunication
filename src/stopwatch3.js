@@ -502,23 +502,27 @@ $("#liveswimset").text('live: ' + currentsetset);
 
 		case "localin":	
 			var localinstatus = $("#localin").data("localin-status");				
-					if(localinstatus == "on")
-					{
-						$("#localin").text('Local Sign-out');	
-						$("#clearpouchdb").show();
-						$(".inmenu-text-local").show();
-						$("#localin").data("localin-status", "off");						
-					}
-					else
-					{
-						$("#localin").text('Local');	
-						$("#clearpouchdb").hide();
-						$(".inmenu-text-local").hide();
-						$("#localin").data("localin-status", "on");
-					}				
+			if(localinstatus == "on")
+			{
+				$("#localin").text('Local Sign-out');	
+				$("#clearpouchdb").show();
+				$(".inmenu-text-local").show();
+				$("#localin").data("localin-status", "off");						
+			}
+			else
+			{
+				$("#localin").text('Local');	
+				$("#clearpouchdb").hide();
+				$(".inmenu-text-local").hide();
+				$("#localin").data("localin-status", "on");
+			}				
+		break;
 			
+		case "help":
+			
+			window.open("http://www.smartstopwatch.org/blog/help", "_self");
 
-		break;				
+		break;			
 				
 	} // closes switch		
 			

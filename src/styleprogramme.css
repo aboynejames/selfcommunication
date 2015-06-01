@@ -179,6 +179,33 @@ nav {
 * Attention context settings
 *
 */
+#attention{
+	display:block;
+	border: 1px solid #cccccc;
+	
+}
+
+#attention-live{
+	float:left;
+	border: 0px solid blue;
+	margin-bottom: 20px;
+	min-width:50%;
+	
+}
+
+#attention-status{
+	float:left;
+	border: 0px solid yellow;
+	margin-left:40px;
+	font-size:1.8em;
+	padding-top:10px;
+}
+
+#hidecontext {
+	border: 0px solid red;
+	
+}
+
 #timetext li {
 	display:inline;
 	
@@ -360,6 +387,14 @@ nav {
 	border:1px solid #eee;
 	margin: 10px;
 }
+nav#sign-in-list ul li{
+	display:inline;
+}
+
+#signin-menu-options {
+	display:block;
+	border:1px solid red;
+}
 
 .inmenu-text {
 	display:block;
@@ -430,8 +465,8 @@ nav {
 .inmenu-text-feedback {
 	display:block;
 	text-align:left;
-	margin-top: 2px;
-	margin-left: 2px;
+	margin-top: 20px;
+	margin-left: 20px;
 	width:440px;
 	height:auto;
 	background-color: #0066CC;
@@ -801,7 +836,7 @@ label {
 
 .recordcount {
 	display:inline;
-	border:1px solid blue;
+	border:2px solid green;
 	background: #F6F6F6;
 	font-size:1.8em;
 }
@@ -868,6 +903,10 @@ label {
 #image-sshare  {
 	width: 4%;
     height: auto;
+}
+
+#help {
+	font-size:0.5em;
 }
 
 @media screen and (max-width: 320px) {

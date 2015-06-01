@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" manifest="communication.appcache" > <!--manifest="communication.appcache"--> 
+<html lang="en"  > <!--manifest="communication.appcache"--> 
   <head>
 	<meta charset="utf-8">
 	<title>Open Sport Project - Communication Mixer</title>
@@ -44,121 +44,126 @@
 	</nav>
 </header>
 <section id="attention">
-	<nav id="timetext">
-		<li>
-			<div class="time"> <input type="text" id="datepicker" /> <a href="" id="datecontext" data-datestatus="on" >Sets</a></div>
-		</li>
-		<li>
-			<div class="lifestyle"></div>
-		</li>
-		<li>
-			<a href="" id="socialcontext" data-socialstatus="on" >Swimmers</a>
-		</li>
-		<li>
-			<a href="" id="toolscontext" data-toolsstatus="on" >Tools</a>
-		</li>
-		<li>
-			<a href="" id="poolcontext" data-poolstatus="on" >Pool</a>
-		</li>
-		<li>
-			<a href="" id="analysiscontext" data-analysisstatus="on" >Analysis</a>
-		</li>
-		<!--<a class="control-text"  href="/viewsplits" id="viewdata" title="on" >Analysis</a>-->
-	</nav>
+	<section id="attention-live">
+		<nav id="timetext">
+			<li>
+				<div class="time"> <input type="text" id="datepicker" /> <a href="" id="datecontext" data-datestatus="on" >Sets</a></div>
+			</li>
+			<li>
+				<div class="lifestyle"></div>
+			</li>
+			<li>
+				<a href="" id="socialcontext" data-socialstatus="on" >Swimmers</a>
+			</li>
+			<li>
+				<a href="" id="toolscontext" data-toolsstatus="on" >Tools</a>
+			</li>
+			<li>
+				<a href="" id="poolcontext" data-poolstatus="on" >Pool</a>
+			</li>
+			<li>
+				<a href="" id="analysiscontext" data-analysisstatus="on" >Analysis</a>
+			</li>
+		</nav>
 
-			<section id="context">
-			<!-- placer for forming text context e.g. word cloud, chaining words, selet tweet, blog post or other content to set context-->
-			</section>
-			<section id="displayhistory">
-				<div id="existingdates">Existing
-					<div class="pastfuturecomm"></div>
-				</div>	
-				<div style="clear:both"></div>
-			</section>
-			
-</section> <!-- close attention settings -->
-<section class="social">
-	Click swimmers name to make active in stopwatch
-		<div class="demo">
-		<h2>
-		<!--<a class="control-text" href="#" id="loadlane" title="on" >Swimmers</a>--><span id="loadlanediv" ></span>
-		</h2> 
-	</div> <!-- closes demo class -->
-		<div id="controloptions">
-		<ul class="controlspanel">
-			<li>
-				<div id="addnewswimmer" >
-					<label>-</label><a href="" id="addswimmer" class="control-text" title="on" >New</a>
-					<div id="newmaster"></div>
-					<div style="clear:both;"></div>
-				</div>
-			</li>
-			<li>
-				<div id="loadclearswimmers" >
-					<label>-</label><a href="" id="clearallswimmers" class="control-text" >Clear</a>
-				</div>
-			</li>		
-			<li>
-				<div id="loadlaneselect" >
-				<label>By squad:</label>
-				<select id="thelaneoptions" class="selectswimmer" >'
-					<option value="-1" selected >-</option>
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-					<option value="9">9</option>
-					<option value="10">10</option>
-				</select>
-				</div>
-			</li>
-			<li>	
-				<div id="loadswimmers">
-					<label>By name</label>
-					<select id="theswimmeroptions" class="selectswimmer">
+		<section id="context">
+		<!-- placer for forming text context e.g. word cloud, chaining words, selet tweet, blog post or other content to set context-->
+		</section>
+		<section id="displayhistory">
+			<div id="existingdates">Existing
+				<div class="pastfuturecomm"></div>
+			</div>	
+			<div style="clear:both"></div>
+		</section>
+				
+		<section class="social">
+		Click swimmers name to make active in stopwatch
+			<div class="demo">
+			<h2>
+			<!--<a class="control-text" href="#" id="loadlane" title="on" >Swimmers</a>--><span id="loadlanediv" ></span>
+			</h2> 
+		</div> <!-- closes demo class -->
+			<div id="controloptions">
+			<ul class="controlspanel">
+				<li>
+					<div id="addnewswimmer" >
+						<label>-</label><a href="" id="addswimmer" class="control-text" title="on" >New</a>
+						<div id="newmaster"></div>
+						<div style="clear:both;"></div>
+					</div>
+				</li>
+				<li>
+					<div id="loadclearswimmers" >
+						<label>-</label><a href="" id="clearallswimmers" class="control-text" >Clear</a>
+					</div>
+				</li>		
+				<li>
+					<div id="loadlaneselect" >
+					<label>By squad:</label>
+					<select id="thelaneoptions" class="selectswimmer" >'
 						<option value="-1" selected >-</option>
-						<option value="a">A</option>
-						<option value="b">B</option>
-						<option value="c">C</option>
-						<option value="d">D</option>
-						<option value="e">E</option>
-						<option value="f">F</option>
-						<option value="g">G</option>
-						<option value="h">H</option>
-						<option value="i">I</option>
-						<option value="j">J</option>
-						<option value="k">K</option>
-						<option value="l">L</option>
-						<option value="m">M</option>
-						<option value="n">N</option>
-						<option value="o">O</option>
-						<option value="p">P</option>
-						<option value="q">Q</option>
-						<option value="r">R</option>
-						<option value="s">S</option>
-						<option value="t">T</option>
-						<option value="u">U</option>
-						<option value="v">V</option>
-						<option value="w">W</option>
-						<option value="x">X</option>
-						<option value="y">Y</option>
-						<option value="z">Z</option>
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7</option>
+						<option value="8">8</option>
+						<option value="9">9</option>
+						<option value="10">10</option>
 					</select>
-				</div>
-			</li>
-		</ul>
-		<div style="clear:both;"></div>
+					</div>
+				</li>
+				<li>	
+					<div id="loadswimmers">
+						<label>By name</label>
+						<select id="theswimmeroptions" class="selectswimmer">
+							<option value="-1" selected >-</option>
+							<option value="a">A</option>
+							<option value="b">B</option>
+							<option value="c">C</option>
+							<option value="d">D</option>
+							<option value="e">E</option>
+							<option value="f">F</option>
+							<option value="g">G</option>
+							<option value="h">H</option>
+							<option value="i">I</option>
+							<option value="j">J</option>
+							<option value="k">K</option>
+							<option value="l">L</option>
+							<option value="m">M</option>
+							<option value="n">N</option>
+							<option value="o">O</option>
+							<option value="p">P</option>
+							<option value="q">Q</option>
+							<option value="r">R</option>
+							<option value="s">S</option>
+							<option value="t">T</option>
+							<option value="u">U</option>
+							<option value="v">V</option>
+							<option value="w">W</option>
+							<option value="x">X</option>
+							<option value="y">Y</option>
+							<option value="z">Z</option>
+						</select>
+					</div>
+				</li>
+			</ul>
+			<div style="clear:both;"></div>
 
-		<div id="addalpha"></div>
-		<div id="addalphatwo"></div>
-	</div>   <!--closes control panel div-->
-			
-	<div id="changeplace"></div>
-	<br />
+			<div id="addalpha"></div>
+			<div id="addalphatwo"></div>
+		</div>   <!--closes control panel div-->
+				
+		<div id="changeplace"></div>
+		<br />
+		</section>
+	</section>
+	<section id="attention-status">
+		<a href="" id="hidecontext" data-attention-hide="on" >hide</a>
+	</section>
+	<div style="clear:both;"></div>
 </section>
 
 	<section class="tools">
@@ -196,7 +201,7 @@
 		</div>
 		</div>
 	</section>
-
+</section> <!-- close attention settings -->
 
 <section id="recordflow">
 
@@ -348,12 +353,21 @@
 
 <section id="controlpanel">
 	<header class="onlinemode">Settings</header>
-	<nav>
-		<ul>Sign-in
+	<nav id="sign-in-list">
+		<ul>
+			<li>
+				Sign-in:
+			</li>
 			<li>
 				<a id="localin" href="#" class="control-text"  data-localin-status="on">Local</a>
+			</li>
+			<li>
 				<a id="twitterin" href="/twitterin" title="/twitterin" class="control-text">Twitter</a>
+			</li>
+			<li>	
 				<!--<a id="facebookin" href="/facebookin" title="/facebookin" class="control-text">Facebook</a>-->
+			</li>
+			<li>
 				<!--<a id="signinopener" href="/signin" title="signin" class="control-text">Sign-in to store data</a>-->
 				<div id="ifsignedin"></div>
 				<div id="siginformarea" style="display: none;">
@@ -365,8 +379,10 @@
 				<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix"> <div class="ui-dialog-buttonset"><button aria-disabled="false" role="button" type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"><span class="ui-button-text">Sign me in</span></button></div></div><div id="responsemessage"></div>
 				</div>
 			</li>
-		</ul>	
-		<ul>
+		</ul>
+	</nav>
+	<nav>
+		<ul id="signin-menu-options">
 			<li class="inmenu-text"><a id="syncdata" href="#" style="display: none;">Sync data</a></li>
 			<li class="inmenu-text"><a id="email-data-id" href="#" style="display: none;">Email IDs</a></li>
 			<li class="inmenu-text-local"><a id="clearpouchdb"href="#"  style="display: none;">Delete permanently all local data</a></li>
@@ -386,7 +402,7 @@
 					<nav>
 						<ul>
 							<li>
-							 <a href="" id="dshare" data-dshare-status="on" ><img id="image-dshare" src="images/dshare-small.png" /></a> <a href="" id="sshare" data-sshare-status="on" ><img id="image-sshare" src="images/sshare-small.png" /></a>  
+							 <a href="" id="dshare" data-dshare-status="on" ><img id="image-dshare" src="images/dshare-small.png" /></a> <a href="" id="sshare" data-sshare-status="on" ><img id="image-sshare" src="images/sshare-small.png" /></a> <a href="" id="help" >HELP</a>  
 							</li>
 						</ul>
 					</nav>
@@ -403,7 +419,7 @@
 </section>
 	
 	<footer id="footer" class="body">
-		<p>2015-v0.2.1 <a href="">Communication - open sport project</a></p>
+		<p>2015-v0.2.3 <a href="">Communication - open sport project</a></p>
 	</footer>	
 	
 </body>

@@ -75,6 +75,11 @@ recordQS.prototype.recordLogic = function(recordin, detailin) {
 			var commdatein = $(detailin).data("dcommid");		
 			var redatemaster = commdatein;		
 			this.recordHTMLset(redatemaster);
+			// automatically close list of set are reset Sets button
+			$("#displayhistory").hide();
+			$("#datecontext").css('background', 'white');		
+			$("#datecontext").data("datestatus", "on");
+			
 		}
 		else
 		{

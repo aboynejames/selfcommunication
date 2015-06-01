@@ -755,7 +755,4 @@ $(document).ready(function(){
 
 	});
 	
-
-	
-		
 });
