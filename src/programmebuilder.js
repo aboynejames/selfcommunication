@@ -4,12 +4,15 @@
 * 
 */	
 $(document).ready(function(){
+	
+	// connect to socket.io
+	homeurl = 'http://localhost/ll/selfcommunication/src/index.html';  // change to hosting URL
+	cloudurl = 'http://localhost:8881';  // location of selfserver REST API
+	localurl =  'http://localhost:8881';  // local networking IP, e.g. a raspberrypi 
 
 	var startobject = new visability();
 	// create pouchdb object
 	livepouch = new pouchdbSettings();
-	//delete local pouchdb database		
-	//livepouch.deletePouch();
 	livellHTML = new llHTML();
 	liveLogic = new llLogic(livepouch, livellHTML);
 	//fire up the classes
@@ -46,13 +49,6 @@ $(document).ready(function(){
 		}
 		
 	});
-	
-	
-	
-	// connect to socket.io
-	cloudurl = 'http://localhost:8881';  // local networking IP, e.g. a raspberrypi  NB edt socketlisten.js  class IP too.
-	homeurl = 'http://localhost/ll/selfcommunication/src/index.html';  // change to hosting URL
-	// make socket available to timing classes
 	
 	/*
 	*  check status of URL bar
@@ -663,54 +659,54 @@ $(document).ready(function(){
                                         this.acceptdetails = '';
         
                                                                                                 // Wrap up the PUT request execution.
-        var makePUTRequest = function(){
+		var makePUTRequest = function(){
 
-            // Make the PUT request.
-		$.ajax({
-                type: "GET",
-                url: "http://www.mepath.co.uk:8833/signinmepath/" + usernamein + '/' + cookieidhash + '/' + passwordin,
-                contentType: "application/json",
-                dataType: "text",
-		success: function( resultback ){
+		    // Make the PUT request.
+			$.ajax({
+			type: "GET",
+			url: "http://www.mepath.co.uk:8833/signinmepath/" + usernamein + '/' + cookieidhash + '/' + passwordin,
+			contentType: "application/json",
+			dataType: "text",
+			success: function( resultback ){
 
-			this.acceptdetails = JSON.parse(resultback);
+				this.acceptdetails = JSON.parse(resultback);
+				
+				if(this.acceptdetails.signin == 'passed') {		
+					$.cookie("traintimer", cookieidhash,  { expires: 7 });
+					$("#ifsignedin").show();	
+					$("#ifsignedin").html('<a class="control-text" text="SignOut" title="signout" href="#"  id="signincloser" >Sign-out</a> ' + usernamein );
+					$("#siginformarea").dialog( "close" );
+					$("#signinopener").hide();
+					$("#sortable1").empty();
+					$("#signupstart").hide();
+					$("#syncdata").show();
+					$("#clearpouchdb").show();
 			
-			if(this.acceptdetails.signin == 'passed') {		
-				$.cookie("traintimer", cookieidhash,  { expires: 7 });
-				$("#ifsignedin").show();	
-				$("#ifsignedin").html('<a class="control-text" text="SignOut" title="signout" href="#"  id="signincloser" >Sign-out</a> ' + usernamein );
-				$("#siginformarea").dialog( "close" );
-				$("#signinopener").hide();
-				$("#sortable1").empty();
-				$("#signupstart").hide();
-				$("#syncdata").show();
-				$("#clearpouchdb").show();
-		
-												
+													
 				}
-				else {
-					$("#responsemessage").html('Signin Failed, try again');
-				}
+					else {
+						$("#responsemessage").html('Signin Failed, try again');
+					}
 
 			},
 			error: function( error ){
 				// Log any error.
-//console.log( "ERROR:", error );
+	//console.log( "ERROR:", error );
 			},
 			complete: function(){
 
 			}
-		});
+			});
 
-	};
+		};
 
 		// Execute the PUT request.
 		makePUTRequest();
 
-										},
-										Cancel: function() {
-										$( this ).dialog( "close" );
-										}
+			},
+			Cancel: function() {
+			$( this ).dialog( "close" );
+			}
 
 			},
 			close: function() {
@@ -722,9 +718,9 @@ $(document).ready(function(){
 			}
 
 		});
-	$("#siginformarea").show();
-	$("#siginformarea").dialog('open');
-
+		
+		$("#siginformarea").show();
+		$("#siginformarea").dialog('open');
 		// prevent the default action, e.g., following a link
 		return false;
 

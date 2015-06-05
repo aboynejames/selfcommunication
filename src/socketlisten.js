@@ -11,7 +11,7 @@
 */
 var llListener = function(starttiming) {
 
-	this.socketpi = io.connect('http://localhost:8881');
+	this.socketpi = io.connect(localurl);
 	starttiming.setsocket(this.socketpi);
 	this.socketpi.emit('swimmerclient', { swimmerdevice: 'localhitchup' });
 	this.activeListeners();
@@ -146,13 +146,17 @@ llListener.prototype.activeListeners = function() {
 		if( startnews == 'localpi')
 		{		
 
-			$("#localpi").text('CONNECTED');
+			//$("#localpi").text('CONNECTED');
+			$("#localpi").css('background-color', 'green');
+			$("#localpi").css('color', 'green');
 			//setInterval(function() {socketpi.emit('swimmerclient', { swimmerdevice: 'localhitchup' })}, 100000);
 		}
 		else
 		{
 		// off local pi network
-		$("#localpi").text('DIS--CONNECTED');
+		$("#localpi").css('background-color', 'red');
+		$("#localpi").css('color', 'red');			
+		//$("#localpi").text('DIS--CONNECTED');
 			
 		}
 	

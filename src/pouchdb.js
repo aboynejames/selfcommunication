@@ -353,8 +353,19 @@ pouchdbSettings.prototype.synccouchdb = function() {
 */	
 pouchdbSettings.prototype.deletePouch = function() {
 
-	this.livepouch.destroy(this.account.pouchdbname, function(err, info) { });
+	this.livepouch.destroy(function(error) {
 
+		if(error)
+		{
+
+		}
+		else
+		{
+			//delete successful reset the page
+			window.open(homeurl, "_self");
+		}
+
+	});
 
 };
 

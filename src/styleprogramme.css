@@ -830,6 +830,20 @@ label {
 
 /**
 *
+* connectivity section
+*
+*/
+
+#localpi, #localvideo, #wifitouchpadin {
+	display: inline-block;
+	width:12px;
+	background-color: red;
+	color: red;
+	
+}
+
+/**
+*
 * Dapps API connetivity status
 *
 */
@@ -883,6 +897,7 @@ label {
 #image-sshare  {
 	width: 4%;
     height: auto;
+	margin-left: 20px;
 }
 
 #help-online {
@@ -905,6 +920,7 @@ label {
     padding:6px 24px;
     text-decoration:none;
     text-shadow:1px 1px 0px #ffffff;
+	margin-left:20px;
 }
 
 @media screen and (max-width: 320px) {
@@ -933,7 +949,7 @@ label {
 		text-shadow:1px 1px 0px #ffffff;
 	}
 
-	#recordme a {
+	#recordme  {
 		display:inline;
 		margin-left:1em;
 	   -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
@@ -957,7 +973,7 @@ label {
 		text-shadow:1px 1px 0px #ffffff;
 	}
 
-	.make {
+	#make {
 		display:inline;
 		margin-left:1em;
 	   -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
